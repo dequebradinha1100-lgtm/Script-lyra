@@ -1,0 +1,6604 @@
+local Players = game:GetService("Players")
+
+game:GetService("TweenService")
+game:GetService("CoreGui")
+game:GetService("StarterGui")
+
+local _ = Players.LocalPlayer
+local fHubBrookhavenWindow = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))():MakeWindow({
+	Title = "FHub - Brookhaven",
+	SubTitle = "by ? ",
+	SaveFolder = "No"
+})
+
+fHubBrookhavenWindow:AddMinimizeButton({
+	Button = {
+		Image = "rbxassetid://89018617324929",
+		BackgroundTransparency = 0
+	}
+})
+
+local tab = fHubBrookhavenWindow:MakeTab({
+	"Fun",
+	"fun"
+})
+local secondaryTab = fHubBrookhavenWindow:MakeTab({
+	"Avatar",
+	"shirt"
+})
+local alternateTab = fHubBrookhavenWindow:MakeTab({
+	"House",
+	"Home"
+})
+local additionalTab = fHubBrookhavenWindow:MakeTab({
+	"Car",
+	"Car"
+})
+local fallbackTab = fHubBrookhavenWindow:MakeTab({
+	"RGB",
+	"brush"
+})
+local nestedTab = fHubBrookhavenWindow:MakeTab({
+	"Music All",
+	"radio"
+})
+local innerTab = fHubBrookhavenWindow:MakeTab({
+	"Music",
+	"music"
+})
+local outerTab = fHubBrookhavenWindow:MakeTab({
+	"Troll",
+	"skull"
+})
+
+fHubBrookhavenWindow:MakeTab({
+	"Lag Server",
+	"bomb"
+})
+
+local previousTab = fHubBrookhavenWindow:MakeTab({
+	"Scripts",
+	"code"
+})
+local currentTab = fHubBrookhavenWindow:MakeTab({
+	"Teleportes",
+	"map-pin"
+})
+
+tab:AddParagraph({
+	"Executor",
+	((function()
+		if not identifyexecutor then
+			if not syn then
+				if not KRNL_LOADED then
+					if not is_sirhurt_closure then
+						if not pebc_execute then
+							if not getexecutorname then
+								return "Unknown Executor"
+							end
+
+							return getexecutorname()
+						end
+
+						return "ProtoSmasher"
+					end
+
+					return "SirHurt"
+				end
+
+				return "KRNL"
+			end
+
+			return "Synapse X"
+		end
+
+		return identifyexecutor()
+	end)())
+})
+tab:AddSection({ "Hub Version: 1" })
+tab:AddParagraph({
+	"Credits",
+	"?"
+})
+tab:AddSection({ "Player Character" })
+
+local players = game:GetService("Players")
+local LocalPlayer = players.LocalPlayer
+local Name = nil
+local flag = false
+
+local function createWeldConstraint(firstChild)
+	local humanoidRootPartContainer = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local Humanoid = humanoidRootPartContainer:FindFirstChildOfClass("Humanoid")
+
+	if firstChild.Character and firstChild.Character:FindFirstChild("Head") then
+		local Head = firstChild.Character.Head
+		local HumanoidRootPart = humanoidRootPartContainer:FindFirstChild("HumanoidRootPart")
+
+		if HumanoidRootPart then
+			HumanoidRootPart.CFrame = Head.CFrame * CFrame.new(0, 2.2, 0)
+
+			for _, child in pairs(HumanoidRootPart:GetChildren()) do
+				if child:IsA("WeldConstraint") then
+					child:Destroy()
+				end
+			end
+
+			local WeldConstraint = Instance.new("WeldConstraint")
+
+			WeldConstraint.Part0 = HumanoidRootPart
+			WeldConstraint.Part1 = Head
+			WeldConstraint.Parent = HumanoidRootPart
+
+			if Humanoid then
+				Humanoid.Sit = true
+			end
+
+			print("Headsit activated on " .. firstChild.Name)
+
+			return true
+		end
+
+		warn("Your Character Has No Humanoid.")
+
+		return false
+	end
+
+	warn("Target Doesn't Have Head Or Character.")
+
+	return false
+end
+local function updateSit()
+	local humanoidRootPartContainer = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local Humanoid = humanoidRootPartContainer:FindFirstChildOfClass("Humanoid")
+	local HumanoidRootPart = humanoidRootPartContainer:FindFirstChild("HumanoidRootPart")
+
+	if HumanoidRootPart then
+		for _, child in pairs(HumanoidRootPart:GetChildren()) do
+			if child:IsA("WeldConstraint") then
+				child:Destroy()
+			end
+		end
+	end
+
+	if Humanoid then
+		Humanoid.Sit = false
+	end
+
+	print("Headsit deactivated")
+end
+local function handleInstance(instanceArgument)
+	local lower = instanceArgument:lower()
+
+	for _, player in pairs(players:GetPlayers()) do
+		if player ~= LocalPlayer and lower == player.Name:lower():sub(1, #lower) then
+			return player
+		end
+	end
+
+	return nil
+end
+local function sendNotification(secondaryPlayer)
+	local StarterGui = game:GetService("StarterGui")
+	local HeadShot = Enum.ThumbnailType.HeadShot
+	local size100X = Enum.ThumbnailSize.Size100x100
+	local userThumbnailAsync, _ = players:GetUserThumbnailAsync(secondaryPlayer.UserId, HeadShot, size100X)
+
+	StarterGui:SetCore("SendNotification", {
+		Title = "Select Player",
+		Text = secondaryPlayer.Name .. " Has Been Selected.",
+		Icon = userThumbnailAsync,
+		Duration = 5
+	})
+end
+
+tab:AddTextBox({
+	Name = "Name Player",
+	Description = "Enter Player Name",
+	PlaceholderText = "String",
+	Callback = function(argument)
+		local instance = handleInstance(argument)
+
+		if not instance then
+			warn("Player Not Found.")
+		else
+			Name = instance.Name
+			sendNotification(instance)
+		end
+	end
+})
+tab:AddButton({
+	"",
+	function()
+		if Name then
+			if flag then
+				updateSit()
+				flag = false
+			else
+				local firstChild = players:FindFirstChild(Name)
+
+				if firstChild and createWeldConstraint(firstChild) then
+					flag = true
+				end
+			end
+
+			return
+		end
+	end
+})
+tab:AddSlider({
+	Name = "Speed Player",
+	Increase = 1,
+	MinValue = 16,
+	MaxValue = 888,
+	Default = 16,
+	Callback = function(walkSpeed)
+		local localValuePlayer = game.Players.LocalPlayer
+		local Humanoid = (localValuePlayer.Character or localValuePlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
+
+		if Humanoid then
+			Humanoid.WalkSpeed = walkSpeed
+		end
+	end
+})
+tab:AddSlider({
+	Name = "Jumppower",
+	Increase = 1,
+	MinValue = 50,
+	MaxValue = 500,
+	Default = 50,
+	Callback = function(jumpPower)
+		local localValuePlayer = game.Players.LocalPlayer
+		local Humanoid = (localValuePlayer.Character or localValuePlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
+
+		if Humanoid then
+			Humanoid.JumpPower = jumpPower
+		end
+	end
+})
+tab:AddSlider({
+	Name = "Gravity",
+	Increase = 1,
+	MinValue = 0,
+	MaxValue = 10000,
+	Default = 196.2,
+	Callback = function(gravity)
+		game.Workspace.Gravity = gravity
+	end
+})
+
+local capturedFlag = false
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+	if capturedFlag then
+		local Character = game.Players.LocalPlayer.Character
+
+		if Character and Character:FindFirstChild("Humanoid") then
+			Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+		end
+	end
+end)
+tab:AddButton({
+	Name = "Reset Speed/Gravity/Jumppower.✅",
+	Callback = function()
+		local localValuePlayer = game.Players.LocalPlayer
+		local Humanoid = (localValuePlayer.Character or localValuePlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
+
+		if Humanoid then
+			Humanoid.WalkSpeed = 16
+			Humanoid.JumpPower = 50
+		end
+
+		game.Workspace.Gravity = 196.2
+		capturedFlag = false
+	end
+})
+tab:AddToggle({
+	Name = "Infinite Jump",
+	Default = false,
+	Callback = function(flag)
+		capturedFlag = flag
+	end
+})
+
+local childData = {
+	Enabled = false,
+	Connections = {},
+	SoccerBalls = {}
+}
+local secondaryPlayers = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local localValuePlayer = secondaryPlayers.LocalPlayer
+
+local function updateHeartbeat(updateHeartbeatCondition)
+	if updateHeartbeatCondition then
+		for _, descendant in ipairs(updateHeartbeatCondition:GetDescendants()) do
+			if descendant:IsA("BasePart") then
+				descendant.CanCollide = not childData.Enabled
+				descendant.Anchored = false
+			end
+		end
+
+		return
+	end
+end
+local function updateInstanceProperties(input)
+	if input.Position.Y < -500 then
+		local cFrame = CFrame.new(0, 100, 0)
+		local raycastParams = RaycastParams.new()
+
+		raycastParams.FilterDescendantsInstances = { localValuePlayer.Character }
+
+		local raycastResult = Workspace:Raycast(input.Position, Vector3.new(0, 500, 0), raycastParams)
+
+		input.CFrame = raycastResult and CFrame.new(raycastResult.Position + Vector3.new(0, 5, 0)) or cFrame
+	end
+end
+local function secondaryUpdateHeartbeat()
+	local updateHeartbeatCondition = Workspace:FindFirstChild("Com", true) and Workspace.Com:FindFirstChild("001_SoccerBalls")
+
+	if updateHeartbeatCondition then
+		for _, child in ipairs(updateHeartbeatCondition:GetChildren()) do
+			if child.Name:match("^Soccer") then
+				pcall(function()
+					child.CanCollide = not childData.Enabled
+					child.Anchored = childData.Enabled
+				end)
+				childData.SoccerBalls[child] = true
+			end
+		end
+
+		if not childData.Connections.BallAdded then
+			childData.Connections.BallAdded = updateHeartbeatCondition.ChildAdded:Connect(function(child)
+				if child.Name:match("^Soccer") then
+					task.wait(0.3)
+					pcall(function()
+						child.CanCollide = not childData.Enabled
+						child.Anchored = childData.Enabled
+					end)
+				end
+			end)
+		end
+	end
+end
+local function alternateUpdateHeartbeat()
+	childData.Connections.Heartbeat = RunService.Heartbeat:Connect(function()
+		local Character = localValuePlayer.Character
+
+		if Character then
+			updateHeartbeat(Character)
+
+			local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+
+			if HumanoidRootPart then
+				updateInstanceProperties(HumanoidRootPart)
+			end
+		end
+
+		if tick() % 2 < 0.1 then
+			secondaryUpdateHeartbeat()
+		end
+	end)
+end
+
+tab:AddToggle({
+	Name = "Ultimate Noclip",
+	Description = "Noclip + Ball Control",
+	Default = false
+}):Callback(function(enabled)
+	childData.Enabled = enabled
+
+	if not enabled then
+		for _, item in pairs(childData.Connections) do
+			item:Disconnect()
+		end
+
+		if localValuePlayer.Character then
+			updateHeartbeat(localValuePlayer.Character)
+		end
+
+		for k in pairs(childData.SoccerBalls) do
+			if k.Parent then
+				pcall(function()
+					k.CanCollide = true
+					k.Anchored = false
+				end)
+			end
+		end
+	else
+		alternateUpdateHeartbeat()
+		secondaryUpdateHeartbeat()
+		childData.Connections.CharAdded = localValuePlayer.CharacterAdded:Connect(function()
+			task.wait(0.5)
+			updateHeartbeat(localValuePlayer.Character)
+		end)
+	end
+end)
+
+local secondaryConnection = nil
+local secondaryFlag = false
+
+tab:AddToggle({
+	Name = "Anti-Sit",
+	Description = "Buggy",
+	Default = false,
+	Callback = function(flag)
+		secondaryFlag = flag
+
+		local localValuePlayer = game:GetService("Players").LocalPlayer
+
+		if not flag then
+			if secondaryConnection then
+				secondaryConnection:Disconnect()
+				secondaryConnection = nil
+			end
+
+			if localValuePlayer.Character then
+				local Humanoid = localValuePlayer.Character:FindFirstChild("Humanoid")
+
+				if Humanoid then
+					Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+				end
+			end
+		else
+			local function updateSeatedConnection(humanoidContainer)
+				local Humanoid = humanoidContainer:FindFirstChild("Humanoid")
+
+				if Humanoid then
+					Humanoid.Sit = false
+					Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+
+					if secondaryConnection then
+						secondaryConnection:Disconnect()
+					end
+
+					secondaryConnection = Humanoid.Seated:Connect(function(isSeated)
+						if isSeated then
+							Humanoid.Sit = false
+							Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+						end
+					end)
+				end
+			end
+
+			if localValuePlayer.Character then
+				updateSeatedConnection(localValuePlayer.Character)
+			end
+
+			local connection = nil
+
+			connection = localValuePlayer.CharacterAdded:Connect(function(character)
+				if secondaryFlag then
+					if character:WaitForChild("Humanoid", 5) then
+						updateSeatedConnection(character)
+					end
+
+					return
+				end
+
+				connection:Disconnect()
+			end)
+		end
+	end
+})
+
+local alternatePlayers = game:GetService("Players")
+local runService = game:GetService("RunService")
+local createEspBillboardData = {}
+local connections = {}
+local createEspBillboardFlag = false
+local newText = "RGB Suave"
+
+tab:AddButton({
+	Name = "Active Fly GUI",
+	Description = "fly universal",
+	Callback = function()
+		local ok, _ = pcall(function()
+			loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-gui-v3-30439"))()
+		end)
+
+		game.StarterGui:SetCore("SendNotification", {
+			Title = ok and "Sucess" or "Error",
+			Text = ok and "Fly GUI loaded." or "Fly GUI Failed To Load.",
+			Duration = 5
+		})
+	end
+})
+tab:AddSection({ "ESP" })
+tab:AddDropdown({
+	Name = "ESP color",
+	Default = "RGB ",
+	Options = {
+		"RGB",
+		"Branco",
+		"Preto",
+		"Vermelho",
+		"Verde",
+		"Azul",
+		"Amarelo",
+		"Rosa",
+		"Roxo"
+	},
+	Callback = function(text)
+		newText = text
+	end
+})
+
+local function new()
+	if newText ~= "RGB" then
+		if newText ~= "Preto" then
+			if newText ~= "Branco" then
+				if newText ~= "Vermelho" then
+					if newText ~= "Verde" then
+						if newText ~= "Azul" then
+							if newText ~= "Amarelo" then
+								if newText ~= "Rosa" then
+									if newText ~= "Roxo" then
+										return Color3.new(1, 1, 1)
+									end
+
+									return Color3.fromRGB(128, 0, 128)
+								end
+
+								return Color3.fromRGB(255, 105, 180)
+							end
+
+							return Color3.fromRGB(255, 255, 0)
+						end
+
+						return Color3.fromRGB(0, 170, 255)
+					end
+
+					return Color3.fromRGB(0, 255, 0)
+				end
+
+				return Color3.fromRGB(255, 0, 0)
+			end
+
+			return Color3.fromRGB(255, 255, 255)
+		end
+
+		return Color3.fromRGB(0, 0, 0)
+	end
+
+	local quotient = tick() % 5 / 5
+
+	return Color3.fromHSV(quotient, 1, 1)
+end
+local function createEspBillboard(secondaryPlayer)
+	if secondaryPlayer ~= alternatePlayers.LocalPlayer then
+		if createEspBillboardFlag then
+			local Character = secondaryPlayer.Character
+
+			if Character then
+				local Head = Character:FindFirstChild("Head")
+
+				if Head then
+					if createEspBillboardData[secondaryPlayer] then
+						createEspBillboardData[secondaryPlayer]:Destroy()
+					end
+
+					local BillboardGui = Instance.new("BillboardGui")
+
+					BillboardGui.Name = "ESP_Billboard"
+					BillboardGui.Parent = Head
+					BillboardGui.Adornee = Head
+					BillboardGui.Size = UDim2.new(0, 200, 0, 50)
+					BillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+					BillboardGui.AlwaysOnTop = true
+
+					local TextLabel = Instance.new("TextLabel")
+
+					TextLabel.Name = "TextLabel"
+					TextLabel.Parent = BillboardGui
+					TextLabel.Size = UDim2.new(1, 0, 1, 0)
+					TextLabel.BackgroundTransparency = 1
+					TextLabel.TextStrokeTransparency = 0.5
+					TextLabel.Font = Enum.Font.SourceSansBold
+					TextLabel.TextSize = 14
+					TextLabel.Text = secondaryPlayer.Name .. " | " .. secondaryPlayer.AccountAge .. " dias"
+					TextLabel.TextColor3 = new()
+					createEspBillboardData[secondaryPlayer] = BillboardGui
+				end
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function cleanup(cleanupArgument)
+	if createEspBillboardData[cleanupArgument] then
+		createEspBillboardData[cleanupArgument]:Destroy()
+		createEspBillboardData[cleanupArgument] = nil
+	end
+end
+
+tab:AddToggle({
+	Name = "ESP Activate",
+	Description = "Mostra nome e idade da conta dos jogadores.",
+	Default = false
+}):Callback(function(flag)
+	createEspBillboardFlag = flag
+
+	if not createEspBillboardFlag then
+		for _, player in pairs(alternatePlayers:GetPlayers()) do
+			cleanup(player)
+		end
+
+		for _, item in pairs(connections) do
+			item:Disconnect()
+		end
+
+		connections = {}
+		createEspBillboardData = {}
+	else
+		for _, player in pairs(alternatePlayers:GetPlayers()) do
+			createEspBillboard(player)
+		end
+
+		local connection = runService.Heartbeat:Connect(function()
+			for _, player in pairs(alternatePlayers:GetPlayers()) do
+				createEspBillboard(player)
+			end
+
+			if newText == "RGB" then
+				for _, player in pairs(alternatePlayers:GetPlayers()) do
+					local textLabelContainer = createEspBillboardData[player]
+
+					if textLabelContainer and textLabelContainer:FindFirstChild("TextLabel") then
+						textLabelContainer.TextLabel.TextColor3 = new()
+					end
+				end
+			end
+		end)
+
+		table.insert(connections, connection)
+
+		local secondaryConnection = alternatePlayers.PlayerAdded:Connect(function(player)
+			createEspBillboard(player)
+
+			local secondaryConnection = player.CharacterAdded:Connect(function()
+				createEspBillboard(player)
+			end)
+
+			table.insert(connections, secondaryConnection)
+		end)
+
+		table.insert(connections, secondaryConnection)
+
+		local alternateConnection = alternatePlayers.PlayerRemoving:Connect(function(player)
+			cleanup(player)
+		end)
+
+		table.insert(connections, alternateConnection)
+	end
+end)
+secondaryTab:AddSection({ "Copy Avatar" })
+
+local additionalPlayers = game:GetService("Players")
+local secondaryLocalValuePlayer = additionalPlayers.LocalPlayer
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local capturedFirstChildCondition = nil
+local firstChildCondition = nil
+
+local function handleAddDropdown()
+	local playerNames = {}
+
+	for _, player in ipairs(additionalPlayers:GetPlayers()) do
+		if player.Name ~= secondaryLocalValuePlayer.Name then
+			table.insert(playerNames, player.Name)
+		end
+	end
+
+	return playerNames
+end
+
+local addDropdown = secondaryTab:AddDropdown({
+	Name = "Players List",
+	Description = "",
+	Options = handleAddDropdown(),
+	Default = "",
+	Flag = "player list",
+	Callback = function(condition)
+		capturedFirstChildCondition = condition
+		firstChildCondition = condition
+	end
+})
+
+local function onPlayerAdded()
+	addDropdown:Set(handleAddDropdown())
+end
+
+onPlayerAdded()
+secondaryTab:AddButton({
+	"Refresh List",
+	function()
+		onPlayerAdded()
+	end
+})
+additionalPlayers.PlayerAdded:Connect(onPlayerAdded)
+additionalPlayers.PlayerRemoving:Connect(onPlayerAdded)
+secondaryTab:AddButton({
+	Name = "Copy Avatar",
+	Callback = function()
+		if firstChildCondition then
+			local Character = additionalPlayers.LocalPlayer.Character
+			local firstChild = additionalPlayers:FindFirstChild(firstChildCondition)
+
+			if firstChild and firstChild.Character then
+				local appliedDescriptionOption = Character and Character:FindFirstChildOfClass("Humanoid")
+				local Humanoid = firstChild.Character:FindFirstChildOfClass("Humanoid")
+
+				if appliedDescriptionOption and Humanoid then
+					local AppliedDescription = appliedDescriptionOption:GetAppliedDescription()
+
+					for _, item in ipairs(AppliedDescription:GetAccessories(true)) do
+						if item.AssetId and tonumber(item.AssetId) then
+							Remotes.Wear:InvokeServer(tonumber(item.AssetId))
+							task.wait(0.2)
+						end
+					end
+
+					if tonumber(AppliedDescription.Shirt) then
+						Remotes.Wear:InvokeServer(tonumber(AppliedDescription.Shirt))
+						task.wait(0.2)
+					end
+
+					if tonumber(AppliedDescription.Pants) then
+						Remotes.Wear:InvokeServer(tonumber(AppliedDescription.Pants))
+						task.wait(0.2)
+					end
+
+					if tonumber(AppliedDescription.Face) then
+						Remotes.Wear:InvokeServer(tonumber(AppliedDescription.Face))
+						task.wait(0.2)
+					end
+
+					local appliedDescription = Humanoid:GetAppliedDescription()
+					local data = {
+						[1] = {
+							[1] = appliedDescription.Torso,
+							[2] = appliedDescription.RightArm,
+							[3] = appliedDescription.LeftArm,
+							[4] = appliedDescription.RightLeg,
+							[5] = appliedDescription.LeftLeg,
+							[6] = appliedDescription.Head
+						}
+					}
+
+					Remotes.ChangeCharacterBody:InvokeServer(unpack(data))
+					task.wait(0.5)
+
+					if tonumber(appliedDescription.Shirt) then
+						Remotes.Wear:InvokeServer(tonumber(appliedDescription.Shirt))
+						task.wait(0.3)
+					end
+
+					if tonumber(appliedDescription.Pants) then
+						Remotes.Wear:InvokeServer(tonumber(appliedDescription.Pants))
+						task.wait(0.3)
+					end
+
+					if tonumber(appliedDescription.Face) then
+						Remotes.Wear:InvokeServer(tonumber(appliedDescription.Face))
+						task.wait(0.3)
+					end
+
+					for _, item in ipairs(appliedDescription:GetAccessories(true)) do
+						if item.AssetId and tonumber(item.AssetId) then
+							Remotes.Wear:InvokeServer(tonumber(item.AssetId))
+							task.wait(0.3)
+						end
+					end
+
+					local bodyColors = firstChild.Character:FindFirstChild("Body Colors")
+
+					if bodyColors then
+						Remotes.ChangeBodyColor:FireServer(tostring(bodyColors.HeadColor))
+						task.wait(0.3)
+					end
+
+					if tonumber(appliedDescription.IdleAnimation) then
+						Remotes.Wear:InvokeServer(tonumber(appliedDescription.IdleAnimation))
+						task.wait(0.3)
+					end
+
+					local PlayersBag = firstChild:FindFirstChild("PlayersBag")
+
+					if PlayersBag then
+						if PlayersBag:FindFirstChild("RPName") and PlayersBag.RPName.Value ~= "" then
+							Remotes.RPNameText:FireServer("RolePlayName", PlayersBag.RPName.Value)
+							task.wait(0.3)
+						end
+
+						if PlayersBag:FindFirstChild("RPBio") and PlayersBag.RPBio.Value ~= "" then
+							Remotes.RPNameText:FireServer("RolePlayBio", PlayersBag.RPBio.Value)
+							task.wait(0.3)
+						end
+
+						if PlayersBag:FindFirstChild("RPNameColor") then
+							Remotes.RPNameColor:FireServer("PickingRPNameColor", PlayersBag.RPNameColor.Value)
+							task.wait(0.3)
+						end
+
+						if PlayersBag:FindFirstChild("RPBioColor") then
+							Remotes.RPNameColor:FireServer("PickingRPBioColor", PlayersBag.RPBioColor.Value)
+							task.wait(0.3)
+						end
+					end
+				end
+			end
+
+			return
+		end
+	end
+})
+secondaryTab:AddSection({ "Roupas 3D" })
+
+local data = {
+	ReplicatedStorage = game:GetService("ReplicatedStorage"),
+	MostrarNotificacao = function(_, text)
+		pcall(function()
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "Information",
+				Text = text,
+				Duration = 5
+			})
+		end)
+	end,
+	Avatares = {
+		{
+			Nome = "Gato de Manga",
+			ID = 124948425515124
+		},
+		{
+			Nome = "Tung Saur",
+			ID = 117098257036480
+		},
+		{
+			Nome = "Tralaleiro",
+			ID = 99459753608381
+		},
+		{
+			Nome = "Monstro S.A",
+			ID = 123609977175226
+		},
+		{
+			Nome = "Trenzinho",
+			ID = 80468697076178
+		},
+		{
+			Nome = "Dino",
+			ID = 11941741105
+		},
+		{
+			Nome = "Pou idoso",
+			ID = 15742966010
+		},
+		{
+			Nome = "Coco/boxt@",
+			ID = 77013984520332
+		},
+		{
+			Nome = "Coelho",
+			ID = 71797333686800
+		},
+		{
+			Nome = "Hipopótamo",
+			ID = 73215892129281
+		},
+		{
+			Nome = "Ratatui",
+			ID = 108557570415453
+		},
+		{
+			Nome = "Galinha",
+			ID = 71251793812515
+		},
+		{
+			Nome = "Pepa pig",
+			ID = 92979204778377
+		},
+		{
+			Nome = "pinguin",
+			ID = 94944293759578
+		},
+		{
+			Nome = "Sid",
+			ID = 87442757321244
+		},
+		{
+			Nome = "puga grande",
+			ID = 111436158728716
+		},
+		{
+			Nome = "SHREK AMALDIÇOADO",
+			ID = 120960401202173
+		},
+		{
+			Nome = "mosquito grande",
+			ID = 108052868536435
+		},
+		{
+			Nome = "Noob Invertido",
+			ID = 106596990206151
+		},
+		{
+			Nome = "Pato(a)",
+			ID = 135132836238349
+		},
+		{
+			Nome = "Cachorro Chihuahua",
+			ID = 18656467256
+		},
+		{
+			Nome = "Gato sla",
+			ID = 18994959003
+		},
+		{
+			Nome = "Gato fei ",
+			ID = 77506186615650
+		},
+		{
+			Nome = "Inpostor",
+			ID = 18234669337
+		},
+		{
+			Nome = "Simon amarelo",
+			ID = 75183593514657
+		},
+		{
+			Nome = "Simon azul",
+			ID = 76155710249925
+		}
+	},
+	GetAvatarNames = function(self)
+		local vNomes = {}
+
+		for _, item in ipairs(self.Avatares) do
+			table.insert(vNomes, item.Nome)
+		end
+
+		return vNomes
+	end,
+	EquiparAvatar = function(self, text)
+		for _, item in ipairs(self.Avatares) do
+			if text == item.Nome then
+				local data = { item.ID }
+				local ok, _ = pcall(function()
+					return self.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Wear"):InvokeServer(unpack(data))
+				end)
+
+				if not ok then
+					self:MostrarNotificacao("Failed To Equip Avatar " .. text .. "!")
+				else
+					self:MostrarNotificacao("Avatar " .. text .. "Equiped sucessfully")
+				end
+
+				return
+			end
+		end
+
+		self:MostrarNotificacao("Avatar " .. text .. " not found")
+	end
+}
+
+secondaryTab:AddDropdown({
+	Name = "accessories 3D",
+	Description = "",
+	Default = nil,
+	Options = data:GetAvatarNames(),
+	Callback = function(selectedAvatar)
+		_G.SelectedAvatar = selectedAvatar
+	end
+})
+secondaryTab:AddButton({
+	Name = "equipar ",
+	Description = "Equipar selecionado",
+	Callback = function()
+		if _G.SelectedAvatar and _G.SelectedAvatar ~= "" then
+			data:EquiparAvatar(_G.SelectedAvatar)
+
+			return
+		end
+
+		data:MostrarNotificacao("Nenhum avatar selecionado!")
+	end
+})
+secondaryTab:AddSection({ "Avatar Editor" })
+secondaryTab:AddParagraph({
+	Title = "Gonna Refresh Your Avatar",
+	Content = ""
+})
+secondaryTab:AddButton({
+	Name = "Mini REPO",
+	Callback = function()
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack({{
+			117101023704825,
+			125767940563838,
+			137301494386930,
+			87357384184710,
+			133391239416999,
+			111818794467824
+		}}))
+		print("Todas as partes do corpo equipadas!")
+	end
+})
+secondaryTab:AddButton({
+	Name = "mini horse",
+	Callback = function()
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack({{
+			124355047456535,
+			120507500641962,
+			82273782655463,
+			113625313757230,
+			109182039511426,
+			0
+		}}))
+		print("Todas as partes do corpo equipadas!")
+	end
+})
+secondaryTab:AddButton({
+	Name = "stick",
+	Callback = function()
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack({{
+			14731384498,
+			14731377938,
+			14731377894,
+			14731377875,
+			14731377941,
+			14731382899
+		}}))
+		print("Todas as partes do corpo equipadas!")
+	end
+})
+secondaryTab:AddButton({
+	Name = "Chunky-Bug",
+	Callback = function()
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack({{
+			15527827600,
+			15527827578,
+			15527831669,
+			15527836067,
+			15527827184,
+			15527827599
+		}}))
+		print("Todas as partes do corpo equipadas!")
+	end
+})
+secondaryTab:AddButton({
+	Name = "Cursed-Spider",
+	Callback = function()
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack({{
+			134555168634906,
+			100269043793774,
+			125607053187319,
+			122504853343598,
+			95907982259204,
+			91289185840375
+		}}))
+		print("Todas as partes do corpo equipadas!")
+	end
+})
+secondaryTab:AddButton({
+	Name = "Possessed-Horror",
+	Callback = function()
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("ChangeCharacterBody"):InvokeServer(unpack({{
+			122800511983371,
+			132465361516275,
+			125155800236527,
+			83070163355072,
+			102906187256945,
+			78311422507297
+		}}))
+		print("Todas as partes do corpo equipadas!")
+	end
+})
+secondaryTab:AddParagraph({
+	Title = "gonna be more here until the next update.",
+	Content = ""
+})
+alternateTab:AddParagraph({
+	Title = "Function Yourself ",
+	Content = ""
+})
+alternateTab:AddButton({
+	Name = "Remove Ban",
+	Description = "",
+	Callback = function()
+		local sum = 0
+		local number = 0
+
+		for i = 1, 37 do
+			local text = "BannedBlock" .. i
+			local firstChild = Workspace:FindFirstChild(text, true)
+
+			if firstChild then
+				local ok, _ = pcall(function()
+					firstChild:Destroy()
+				end)
+
+				if not ok then
+					number = number + 1
+				else
+					sum = sum + 1
+				end
+			end
+		end
+
+		for _, descendant in pairs(Workspace:GetDescendants()) do
+			if descendant.Name:match("BannedBlock") then
+				local ok, _ = pcall(function()
+					descendant:Destroy()
+				end)
+
+				if not ok then
+					number = number + 1
+				else
+					sum = sum + 1
+				end
+			end
+		end
+
+		if sum > 0 then
+			game.StarterGui:SetCore("SendNotification", {
+				Title = "Sucess",
+				Text = "Ban has removed" .. sum .. "",
+				Duration = 5
+			})
+		end
+
+		if number > 0 then
+			game.StarterGui:SetCore("SendNotification", {
+				Title = "Error",
+				Text = "Failed to remove ban" .. number .. "",
+				Duration = 5
+			})
+		end
+
+		if sum == 0 and number == 0 then
+			game.StarterGui:SetCore("SendNotification", {
+				Title = "Error",
+				Text = "no ban found to unban.",
+				Duration = 5
+			})
+		end
+	end
+})
+alternateTab:AddParagraph({
+	Title = "i have no idea to add here.",
+	Content = ""
+})
+additionalTab:AddSection({ "all car functions" })
+
+local fallbackPlayers = game:GetService("Players")
+local parent = game:GetService("Workspace")
+local playerGuiContainer = fallbackPlayers.LocalPlayer
+local CurrentCamera = parent.CurrentCamera
+local nestedPlayers = {
+	Players = fallbackPlayers,
+	Workspace = parent,
+	LocalPlayer = playerGuiContainer,
+	Camera = CurrentCamera,
+	MostrarNotificacao = function(_, text)
+		pcall(function()
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "Information",
+				Text = text,
+				Duration = 5
+			})
+		end)
+	end,
+	ToggleFallDamage = function(self, flag)
+		if self.LocalPlayer.Character and self.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			local Humanoid = self.LocalPlayer.Character.Humanoid
+
+			if not flag then
+				Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+				Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
+
+				return false
+			end
+
+			Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+			Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+			Humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp, true)
+			Humanoid.PlatformStand = false
+
+			return true
+		end
+
+		return false
+	end,
+	TeleportToSeat = function(self, instance, _)
+		if self.LocalPlayer.Character and self.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			local Humanoid = self.LocalPlayer.Character.Humanoid
+			local HumanoidRootPart = self.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+			if HumanoidRootPart then
+				Humanoid.Sit = false
+				task.wait(0.1)
+				HumanoidRootPart.CFrame = instance.CFrame + Vector3.new(0, 5, 0)
+				task.wait(0.1)
+				instance:Sit(Humanoid)
+				task.wait(0.5)
+
+				return instance == Humanoid.SeatPart
+			end
+
+			self:MostrarNotificacao("Parte raiz do personagem não encontrada!")
+
+			return false
+		end
+
+		self:MostrarNotificacao("Personagem não encontrado!")
+
+		return false
+	end,
+	TeleportToVoid = function(self, bodyContainer)
+		if bodyContainer then
+			if not bodyContainer.PrimaryPart then
+				local primaryPart = bodyContainer:FindFirstChild("Body", true) or bodyContainer:FindFirstChild("Chassis", true)
+
+				if not primaryPart or not primaryPart:IsA("BasePart") then
+					self:MostrarNotificacao("Parte principal do veículo não encontrada!")
+
+					return
+				end
+
+				bodyContainer.PrimaryPart = primaryPart
+			end
+
+			local result = Vector3.new(0, -1000, 0)
+
+			bodyContainer:SetPrimaryPartCFrame(CFrame.new(result))
+			task.wait(0.5)
+
+			return
+		end
+
+		self:MostrarNotificacao("Veículo inválido!")
+	end,
+	TeleportToPlayer = function(self, bodyContainer, sumNumber)
+		if bodyContainer then
+			if not bodyContainer.PrimaryPart then
+				local primaryPart = bodyContainer:FindFirstChild("Body", true) or bodyContainer:FindFirstChild("Chassis", true)
+
+				if not primaryPart or not primaryPart:IsA("BasePart") then
+					self:MostrarNotificacao("Parte principal do veículo não encontrada!")
+
+					return
+				end
+
+				bodyContainer.PrimaryPart = primaryPart
+			end
+
+			local sum = sumNumber + Vector3.new(5, 0, 5)
+
+			bodyContainer:SetPrimaryPartCFrame(CFrame.new(sum))
+			task.wait(0.5)
+
+			return
+		end
+
+		self:MostrarNotificacao("Veículo inválido!")
+	end,
+	ExitCarAndReturn = function(self, condition)
+		if self.LocalPlayer.Character and self.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			local Humanoid = self.LocalPlayer.Character.Humanoid
+
+			if Humanoid.SeatPart then
+				Humanoid.Sit = false
+			end
+
+			task.wait(0.1)
+
+			if condition then
+				self.LocalPlayer.Character:PivotTo(CFrame.new(condition))
+			end
+
+			return
+		end
+	end,
+	AtualizarListaCarros = function(self)
+		local Vehicles = self.Workspace:FindFirstChild("Vehicles")
+		local childNames = {}
+
+		if Vehicles then
+			for _, child in ipairs(Vehicles:GetChildren()) do
+				if child.Name:match("Car$") then
+					table.insert(childNames, child.Name)
+				end
+			end
+		end
+
+		return childNames
+	end
+}
+
+additionalTab:AddParagraph({
+	Title = "use void protection",
+	Content = ""
+})
+fallbackTab:AddToggle({
+	Name = "kill all cars in the server",
+	Description = "Teleports all people car to void",
+	Default = false,
+	Callback = function(secondaryFlag)
+		local HumanoidRootPartPosition = nil
+		local flag = secondaryFlag
+
+		if not secondaryFlag then
+			flag = false
+			nestedPlayers:ToggleFallDamage(false)
+		else
+			if not self.LocalPlayer.Character or not self.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+				nestedPlayers:MostrarNotificacao("Personagem não encontrado!")
+
+				return
+			end
+
+			HumanoidRootPartPosition = self.LocalPlayer.Character.HumanoidRootPart.Position
+			nestedPlayers:ToggleFallDamage(true)
+			spawn(function()
+				local Vehicles = nestedPlayers.Workspace:FindFirstChild("Vehicles")
+
+				if Vehicles then
+					local childs = {}
+
+					for _, child in ipairs(Vehicles:GetChildren()) do
+						if child.Name:match("Car$") then
+							table.insert(childs, child)
+						end
+					end
+
+					for _, item in ipairs(childs) do
+						if not flag then
+							break
+						end
+
+						local VehicleSeat = item:FindFirstChildWhichIsA("VehicleSeat", true)
+
+						if VehicleSeat and VehicleSeat.Occupant == nil and nestedPlayers:TeleportToSeat(VehicleSeat, item) then
+							nestedPlayers:TeleportToVoid(item)
+							nestedPlayers:ExitCarAndReturn(HumanoidRootPartPosition)
+							task.wait(1)
+						end
+					end
+
+					if flag then
+						flag = false
+						nestedPlayers:ToggleFallDamage(false)
+					end
+
+					return
+				end
+
+				nestedPlayers:MostrarNotificacao("Pasta de veículos não encontrada!")
+			end)
+		end
+	end
+})
+additionalTab:AddSection({ "car functions" })
+
+local secondaryAddDropdown = additionalTab:AddDropdown({
+	Name = "Select Player Car",
+	Description = "To Kill",
+	Default = nil,
+	Options = nestedPlayers:AtualizarListaCarros(),
+	Callback = function(selectedVehicle)
+		_G.SelectedVehicle = selectedVehicle
+	end
+})
+
+additionalTab:AddToggle({
+	Name = "Look At Selected Car Camera",
+	Description = "...",
+	Default = false,
+	Callback = function(flag)
+		if not flag then
+			if nestedPlayers.OriginalCameraSubject then
+				nestedPlayers.Camera.CameraSubject = nestedPlayers.OriginalCameraSubject
+				nestedPlayers.Camera.CameraType = nestedPlayers.OriginalCameraType or Enum.CameraType.Custom
+				nestedPlayers:MostrarNotificacao("Câmera restaurada ao normal!")
+				nestedPlayers.OriginalCameraSubject = nil
+				nestedPlayers.OriginalCameraType = nil
+			end
+		else
+			if not _G.SelectedVehicle or _G.SelectedVehicle == "" then
+				nestedPlayers:MostrarNotificacao("Nenhum carro selecionado!")
+
+				return
+			end
+
+			local Vehicles = nestedPlayers.Workspace:FindFirstChild("Vehicles")
+
+			if not Vehicles then
+				nestedPlayers:MostrarNotificacao("Pasta de veículos não encontrada!")
+
+				return
+			end
+
+			local gSelectedVehicle = Vehicles:FindFirstChild(_G.SelectedVehicle)
+
+			if not gSelectedVehicle then
+				nestedPlayers:MostrarNotificacao("Carro selecionado não encontrado!")
+
+				return
+			end
+
+			local VehicleSeat = gSelectedVehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+
+			if not VehicleSeat then
+				nestedPlayers:MostrarNotificacao("Assento do carro não encontrado!")
+
+				return
+			end
+
+			nestedPlayers.OriginalCameraSubject = nestedPlayers.Camera.CameraSubject
+			nestedPlayers.OriginalCameraType = nestedPlayers.Camera.CameraType
+			nestedPlayers.Camera.CameraSubject = VehicleSeat
+			nestedPlayers.Camera.CameraType = Enum.CameraType.Follow
+			nestedPlayers:MostrarNotificacao("Câmera ajustada para o carro " .. _G.SelectedVehicle .. "!")
+		end
+	end
+})
+nestedPlayers.Workspace:WaitForChild("Vehicles").ChildAdded:Connect(function()
+	secondaryAddDropdown:Set(nestedPlayers:AtualizarListaCarros())
+end)
+nestedPlayers.Workspace:WaitForChild("Vehicles").ChildRemoved:Connect(function()
+	secondaryAddDropdown:Set(nestedPlayers:AtualizarListaCarros())
+end)
+additionalTab:AddSection({ "function kill car" })
+additionalTab:AddButton({
+	Name = "Destroy Car",
+	Description = "Teleports selected Car To Void",
+	Callback = function()
+		if _G.SelectedVehicle and _G.SelectedVehicle ~= "" then
+			local Vehicles = nestedPlayers.Workspace:FindFirstChild("Vehicles")
+
+			if Vehicles then
+				local gSelectedVehicle = Vehicles:FindFirstChild(_G.SelectedVehicle)
+
+				if gSelectedVehicle then
+					local VehicleSeat = gSelectedVehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+
+					if VehicleSeat then
+						if not VehicleSeat.Occupant then
+							if not nestedPlayers.LocalPlayer.Character or not nestedPlayers.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+								nestedPlayers:MostrarNotificacao("Personagem do jogador não encontrado!")
+
+								return
+							end
+
+							local HumanoidRootPartPosition = nestedPlayers.LocalPlayer.Character.HumanoidRootPart.Position
+
+							nestedPlayers:ToggleFallDamage(true)
+
+							if not nestedPlayers:TeleportToSeat(VehicleSeat, gSelectedVehicle) then
+								nestedPlayers:MostrarNotificacao("Falha ao sentar no carro!")
+							else
+								nestedPlayers:TeleportToVoid(gSelectedVehicle)
+								nestedPlayers:MostrarNotificacao("Carro " .. _G.SelectedVehicle .. " foi teleportado para o void!")
+								nestedPlayers:ExitCarAndReturn(HumanoidRootPartPosition)
+							end
+
+							nestedPlayers:ToggleFallDamage(false)
+
+							return
+						end
+
+						nestedPlayers:MostrarNotificacao("O kill car não foi possível, há alguém sentado no assento do motorista!")
+
+						return
+					end
+
+					nestedPlayers:MostrarNotificacao("Assento do carro não encontrado!")
+
+					return
+				end
+
+				nestedPlayers:MostrarNotificacao("Carro selecionado não encontrado!")
+
+				return
+			end
+
+			nestedPlayers:MostrarNotificacao("Pasta de veículos não encontrada!")
+
+			return
+		end
+
+		nestedPlayers:MostrarNotificacao("Nenhum carro selecionado!")
+	end
+})
+additionalTab:AddButton({
+	Name = "Get Selected Cart",
+	Description = "Teleports To Selected Car Position ",
+	Callback = function()
+		if _G.SelectedVehicle and _G.SelectedVehicle ~= "" then
+			local Vehicles = nestedPlayers.Workspace:FindFirstChild("Vehicles")
+
+			if Vehicles then
+				local gSelectedVehicle = Vehicles:FindFirstChild(_G.SelectedVehicle)
+
+				if gSelectedVehicle then
+					local VehicleSeat = gSelectedVehicle:FindFirstChildWhichIsA("VehicleSeat", true)
+
+					if VehicleSeat then
+						if not VehicleSeat.Occupant then
+							if not nestedPlayers.LocalPlayer.Character or not nestedPlayers.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+								nestedPlayers:MostrarNotificacao("Personagem do jogador não encontrado!")
+
+								return
+							end
+
+							local HumanoidRootPartPosition = nestedPlayers.LocalPlayer.Character.HumanoidRootPart.Position
+
+							nestedPlayers:ToggleFallDamage(true)
+
+							if not nestedPlayers:TeleportToSeat(VehicleSeat, gSelectedVehicle) then
+								nestedPlayers:MostrarNotificacao("Falha ao sentar no carro!")
+							else
+								nestedPlayers:TeleportToPlayer(gSelectedVehicle, HumanoidRootPartPosition)
+								nestedPlayers:MostrarNotificacao("Carro " .. _G.SelectedVehicle .. " foi teleportado para você!")
+								nestedPlayers:ExitCarAndReturn(HumanoidRootPartPosition)
+							end
+
+							nestedPlayers:ToggleFallDamage(false)
+
+							return
+						end
+
+						nestedPlayers:MostrarNotificacao("O teleporte do carro não foi possível, há alguém sentado no assento do motorista!")
+
+						return
+					end
+
+					nestedPlayers:MostrarNotificacao("Assento do carro não encontrado!")
+
+					return
+				end
+
+				nestedPlayers:MostrarNotificacao("Carro selecionado não encontrado!")
+
+				return
+			end
+
+			nestedPlayers:MostrarNotificacao("Pasta de veículos não encontrada!")
+
+			return
+		end
+
+		nestedPlayers:MostrarNotificacao("Nenhum carro selecionado!")
+	end
+})
+additionalTab:AddButton({
+	Name = "Get All Cars In The Server",
+	Description = "Teleports All Cars In The Server To You",
+	Callback = function()
+		if not nestedPlayers.LocalPlayer.Character or not nestedPlayers.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+			nestedPlayers:MostrarNotificacao("Personagem do jogador não encontrado!")
+
+			return
+		end
+
+		local HumanoidRootPartPosition = nestedPlayers.LocalPlayer.Character.HumanoidRootPart.Position
+		local Vehicles = nestedPlayers.Workspace:FindFirstChild("Vehicles")
+
+		if Vehicles then
+			nestedPlayers:ToggleFallDamage(true)
+
+			local childs = {}
+
+			for _, child in ipairs(Vehicles:GetChildren()) do
+				if child.Name:match("Car$") then
+					table.insert(childs, child)
+				end
+			end
+
+			for _, item in ipairs(childs) do
+				local VehicleSeat = item:FindFirstChildWhichIsA("VehicleSeat", true)
+
+				if not VehicleSeat or VehicleSeat.Occupant ~= nil then
+					if not VehicleSeat then
+						nestedPlayers:MostrarNotificacao("Carro " .. item.Name .. " ignorado: assento não encontrado!")
+					else
+						nestedPlayers:MostrarNotificacao("Carro " .. item.Name .. " ignorado: alguém está no assento do motorista!")
+					end
+				elseif not nestedPlayers:TeleportToSeat(VehicleSeat, item) then
+					nestedPlayers:MostrarNotificacao("Falha ao sentar no carro " .. item.Name .. "!")
+				else
+					nestedPlayers:TeleportToPlayer(item, HumanoidRootPartPosition)
+					nestedPlayers:ExitCarAndReturn(HumanoidRootPartPosition)
+					nestedPlayers:MostrarNotificacao("Carro " .. item.Name .. " foi teleportado para você!")
+					task.wait(1)
+				end
+			end
+
+			nestedPlayers:ToggleFallDamage(false)
+
+			if #childs == 0 then
+				nestedPlayers:MostrarNotificacao("Nenhum carro disponível para teleportar!")
+			end
+
+			return
+		end
+
+		nestedPlayers:MostrarNotificacao("Pasta de veículos não encontrada!")
+	end
+})
+
+local alternateFlag = false
+
+nestedPlayers.LocalPlayer.CharacterAdded:Connect(function(character)
+	local Humanoid = character:WaitForChild("Humanoid")
+
+	if not alternateFlag then
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, true)
+	else
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp, true)
+		Humanoid.PlatformStand = false
+	end
+end)
+fallbackTab:AddSection({ "" })
+
+local resultNumber = 1
+
+fallbackTab:AddSlider({
+	Name = "RGB Speed",
+	Description = "Changes RGB Speed",
+	Min = 1,
+	Max = 5,
+	Increase = 1,
+	Default = 3,
+	Callback = function(number)
+		resultNumber = number
+	end
+})
+
+local function fromHsv(quotientNumber)
+	local quotient = tick() * quotientNumber % 5 / 5
+
+	return Color3.fromHSV(quotient, 1, 1)
+end
+local function sendEvent(sendEventArgument, sendEventData)
+	local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+
+	if RE and RE:FindFirstChild(sendEventArgument) then
+		pcall(function()
+			RE[sendEventArgument]:FireServer(unpack(sendEventData))
+		end)
+	end
+end
+
+nestedTab:AddSection({ "RGB para usar em você" })
+
+local capturedFlagCondition = false
+
+fallbackTab:AddToggle({
+	Name = "Name + Bio RGB ",
+	Default = false,
+	Callback = function(flag)
+		capturedFlagCondition = flag
+
+		if flag then
+			task.spawn(function()
+				while capturedFlagCondition and playerGuiContainer.Character do
+					local result = fromHsv(resultNumber)
+
+					sendEvent("1RPNam1eColo1r", {
+						"PickingRPNameColor",
+						result
+					})
+					sendEvent("1RPNam1eColo1r", {
+						"PickingRPBioColor",
+						result
+					})
+					task.wait(0.03)
+				end
+			end)
+		end
+	end
+})
+fallbackTab:AddToggle({
+	Name = "RGB Char",
+	Description = "RGB Character",
+	Default = false
+}):Callback(function(rgbCorpo)
+	getgenv().rgbCorpo = rgbCorpo
+	task.spawn(function()
+		while getgenv().rgbCorpo do
+			local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+
+			if remotes and remotes:FindFirstChild("ChangeBodyColor") then
+				pcall(function()
+					remotes.ChangeBodyColor:FireServer({ BrickColor.new(fromHsv(resultNumber)) })
+				end)
+			end
+
+			task.wait(0.1)
+		end
+	end)
+end)
+fallbackTab:AddToggle({
+	Name = "RGB Hair",
+	Description = "Kinda Funny",
+	Default = false
+}):Callback(function(rgbCabelo)
+	getgenv().rgbCabelo = rgbCabelo
+	task.spawn(function()
+		while getgenv().rgbCabelo do
+			sendEvent("1Max1y", {
+				"ChangeHairColor2",
+				fromHsv(resultNumber)
+			})
+			task.wait(0.5)
+		end
+	end)
+end)
+fallbackTab:AddSection({ "Car And Home" })
+fallbackTab:AddToggle({
+	Name = "RGB Home",
+	Description = "RGB",
+	Default = false
+}):Callback(function(rgbCasa)
+	getgenv().rgbCasa = rgbCasa
+	task.spawn(function()
+		while getgenv().rgbCasa do
+			sendEvent("1Player1sHous1e", {
+				"ColorPickHouse",
+				fromHsv(resultNumber)
+			})
+			task.wait(0.1)
+		end
+	end)
+end)
+
+local additionalFlag = false
+
+fallbackTab:AddToggle({
+	Name = "Car RGB  (Premium)",
+	Description = "Only For Premium !",
+	Default = false,
+	Callback = function(flag)
+		additionalFlag = flag
+
+		if flag then
+			task.spawn(function()
+				while additionalFlag and playerGuiContainer.Character do
+					local result = fromHsv(resultNumber)
+
+					sendEvent("1Player1sCa1r", {
+						"PickingCarColor",
+						result
+					})
+					task.wait(0.03)
+				end
+			end)
+		end
+	end
+})
+fallbackTab:AddToggle({
+	Name = "RGB Bike",
+	Description = "RGB",
+	Default = false
+}):Callback(function(rgbBicicleta)
+	getgenv().rgbBicicleta = rgbBicicleta
+	task.spawn(function()
+		while getgenv().rgbBicicleta do
+			sendEvent("1Player1sCa1r", {
+				"NoMotorColor",
+				fromHsv(resultNumber)
+			})
+			task.wait(0.1)
+		end
+	end)
+end)
+nestedTab:AddSection({ "itens/tool" })
+
+local fallbackFlag = false
+
+fallbackTab:AddToggle({
+	Name = "Radio RGB  ",
+	Description = "Change the radio color with continuous RGB",
+	Default = false,
+	Callback = function(flag)
+		fallbackFlag = flag
+
+		if flag then
+			task.spawn(function()
+				while fallbackFlag and playerGuiContainer.Character do
+					local secondaryResult = fromHsv(resultNumber)
+					local ok, result = pcall(function()
+						return playerGuiContainer:WaitForChild("PlayerGui"):WaitForChild("ToolGui"):WaitForChild("ToolSettings"):WaitForChild("Settings"):WaitForChild("PropsColor"):WaitForChild("SetColor")
+					end)
+
+					if ok and result then
+						pcall(function()
+							result:FireServer(secondaryResult)
+						end)
+					end
+
+					task.wait(0.03)
+				end
+			end)
+		end
+	end
+})
+fallbackTab:AddToggle({
+	Name = "RGB Megafon prop",
+	Description = "RGB on megafon",
+	Default = false
+}):Callback(function(rgbMegafone)
+	getgenv().rgbMegafone = rgbMegafone
+	task.spawn(function()
+		while getgenv().rgbMegafone do
+			local result = fromHsv(resultNumber)
+			local PlayerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+
+			if PlayerGui then
+				local ToolGui = PlayerGui:FindFirstChild("ToolGui")
+
+				if ToolGui then
+					local ToolSettings = ToolGui:FindFirstChild("ToolSettings")
+
+					if ToolSettings then
+						local PropsColor = ToolSettings:FindFirstChild("Settings"):FindFirstChild("PropsColor")
+
+						if PropsColor and PropsColor:FindFirstChild("SetColor") then
+							pcall(function()
+								PropsColor.SetColor:FireServer(result)
+							end)
+						end
+					end
+				end
+			end
+
+			task.wait(0.1)
+		end
+	end)
+end)
+fallbackTab:AddToggle({
+	Name = "RGB Donut",
+	Description = "RGB on Donut",
+	Default = false
+}):Callback(function(rgbRosquinha)
+	getgenv().rgbRosquinha = rgbRosquinha
+	task.spawn(function()
+		while getgenv().rgbRosquinha do
+			local result = fromHsv(resultNumber)
+			local PlayerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+
+			if PlayerGui then
+				local ToolGui = PlayerGui:FindFirstChild("ToolGui")
+
+				if ToolGui then
+					local ToolSettings = ToolGui:FindFirstChild("ToolSettings")
+
+					if ToolSettings then
+						local PropsColor = ToolSettings:FindFirstChild("Settings"):FindFirstChild("PropsColor")
+
+						if PropsColor and PropsColor:FindFirstChild("SetColor") then
+							pcall(function()
+								PropsColor.SetColor:FireServer(result)
+							end)
+						end
+					end
+				end
+			end
+
+			task.wait(0.1)
+		end
+	end)
+end)
+
+local nestedFlag = false
+local text = ""
+
+nestedTab:AddTextBox({
+	Name = "Inset ID Audio All",
+	Description = "Enter the ID of the sound you want",
+	Default = "",
+	PlaceholderText = "Example: 6832470734",
+	ClearTextOnFocus = true,
+	Callback = function(numberText)
+		text = tonumber(numberText)
+	end
+})
+
+local function sendRe(sendReArgument, sendReData)
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local remoteEvent = ReplicatedStorage:FindFirstChild("RE") and ReplicatedStorage.RE:FindFirstChild(sendReArgument)
+
+	if remoteEvent then
+		pcall(function()
+			remoteEvent:FireServer(unpack(sendReData))
+		end)
+	end
+end
+
+nestedTab:AddButton({
+	Name = "Play Sound",
+	Description = "",
+	Callback = function()
+		if text then
+			sendRe("1Gu1nSound1s", {
+				parent,
+				text,
+				1
+			})
+
+			local Sound = Instance.new("Sound", parent)
+
+			Sound.SoundId = "rbxassetid://" .. text
+			Sound.Looped = false
+			Sound:Play()
+			task.wait(3)
+			Sound:Destroy()
+		end
+	end
+})
+nestedTab:AddToggle({
+	Name = "Loop",
+	Description = "loop play sound",
+	Default = false,
+	Callback = function(flag)
+		nestedFlag = flag
+
+		if nestedFlag then
+			spawn(function()
+				while nestedFlag do
+					if text then
+						sendRe("1Gu1nSound1s", {
+							parent,
+							text,
+							1
+						})
+
+						local Sound = Instance.new("Sound", parent)
+
+						Sound.SoundId = "rbxassetid://" .. text
+						Sound.Looped = false
+						Sound:Play()
+						task.spawn(function()
+							task.wait(3)
+							Sound:Destroy()
+						end)
+					end
+
+					task.wait(1)
+				end
+			end)
+		end
+	end
+})
+
+local function createSound(name, data, default)
+	local names = {}
+	local createSoundData = {}
+
+	for k, item in pairs(data) do
+		for _, item in ipairs(item) do
+			if item.name ~= "" and item.id ~= "4354908569" then
+				table.insert(names, item.name)
+				createSoundData[item.name] = {
+					id = item.id,
+					category = k
+				}
+			end
+		end
+	end
+
+	local id = nil
+	local volume = 1
+	local pitch = 1
+
+	local function createSound(createSoundText, volume, pitch)
+		sendRe("1Gu1nSound1s", {
+			parent,
+			createSoundText,
+			volume
+		})
+
+		local Sound = Instance.new("Sound")
+
+		Sound.Parent = parent
+		Sound.SoundId = "rbxassetid://" .. createSoundText
+		Sound.Volume = volume
+		Sound.Pitch = pitch
+		Sound.Looped = false
+		Sound:Play()
+		task.spawn(function()
+			task.wait(3)
+			Sound:Destroy()
+		end)
+	end
+
+	nestedTab:AddDropdown({
+		Name = name,
+		Description = "Choose a sound to play on the server",
+		Default = default,
+		Multi = false,
+		Options = names,
+		Callback = function(createSoundFlag)
+			if not createSoundFlag or not createSoundData[createSoundFlag] then
+				id = nil
+			else
+				id = createSoundData[createSoundFlag].id
+			end
+		end
+	})
+	nestedTab:AddButton({
+		Name = "Play Selected",
+		Description = "Click to play the sound from the dropdown",
+		Callback = function()
+			if id then
+				createSound(id, volume, pitch)
+			end
+		end
+	})
+
+	local createSoundFlag = false
+
+	nestedTab:AddToggle({
+		Name = "Loop",
+		Description = "Loop Play Sound",
+		Default = false,
+		Callback = function(flag)
+			createSoundFlag = flag
+
+			if flag then
+				task.spawn(function()
+					while createSoundFlag do
+						if id then
+							createSound(id, volume, pitch)
+						end
+
+						task.wait(1)
+					end
+				end)
+			end
+		end
+	})
+end
+
+createSound("Selecione um meme", {
+	Memes = {
+		{
+			name = "pankapakan",
+			id = "122547522269143"
+		},
+		{
+			name = "rape",
+			id = "128863565301778"
+		},
+		{
+			name = "NAHH",
+			id = "116293771329297"
+		},
+		{
+			name = "G0z33iiii",
+			id = "93462644278510"
+		},
+		{
+			name = "Hommmm ",
+			id = "133135656929513"
+		},
+		{
+			name = "sus1",
+			id = "105263704862377"
+		},
+		{
+			name = "sus2",
+			id = "92186909873950"
+		},
+		{
+			name = "sus3",
+			id = "128137573022197"
+		},
+		{
+			name = "sus4",
+			id = "131219411501419"
+		},
+		{
+			name = "sus kawai",
+			id = "100409245129170"
+		},
+		{
+			name = "Hentai wiaaaaan",
+			id = "88332347208779"
+		},
+		{
+			name = "iamete cunasai",
+			id = "108494476595033"
+		},
+		{
+			name = "dodichan onnn...",
+			id = "134640594695384"
+		},
+		{
+			name = "Loly gemiD0",
+			id = "119277017538197"
+		},
+		{
+			name = "poison",
+			id = "115870718113313"
+		},
+		{
+			name = "chegachega SUS",
+			id = "77405864184828"
+		},
+		{
+			name = "uwu",
+			id = "76820720070248"
+		},
+		{
+			name = "sus",
+			id = "130714479795369"
+		},
+		{
+			name = "girl audio 2",
+			id = "84207358477461"
+		},
+		{
+			name = "Hoo ze da manga",
+			id = "106624090319571"
+		},
+		{
+			name = "hi Alexander ",
+			id = "107261471941570"
+		},
+		{
+			name = "haaii meme",
+			id = "120006672159037"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "GoGogo gogogo",
+			id = "103262503950995"
+		},
+		{
+			name = "Toma jack",
+			id = "132603645477541"
+		},
+		{
+			name = "Toma jackV2",
+			id = "100446887985203"
+		},
+		{
+			name = "Random",
+			id = "97476487963273"
+		},
+		{
+			name = "ifood",
+			id = "133843750864059"
+		},
+		{
+			name = "Random",
+			id = "94395705857835"
+		},
+		{
+			name = "Random",
+			id = "136804576009416"
+		},
+		{
+			name = "coringa",
+			id = "84663543883498"
+		},
+		{
+			name = "shoope",
+			id = "8747441609"
+		},
+		{
+			name = "Random",
+			id = "103440368630269"
+		},
+		{
+			name = "Random",
+			id = "101232400175829"
+		},
+		{
+			name = "Random",
+			id = "78442476709262"
+		},
+		{
+			name = "mita even if im too one",
+			id = "94889439372168"
+		},
+		{
+			name = "today i will be your wife and you ",
+			id = "90844637105538"
+		},
+		{
+			name = "Lie here",
+			id = "100291188941582"
+		},
+		{
+			name = "miau",
+			id = "131804436682424"
+		},
+		{
+			name = "skibidi",
+			id = "128771670035179"
+		},
+		{
+			name = "BIRULEIBI",
+			id = "121569761604968"
+		},
+		{
+			name = "biseabesjnjkasnakjsndjkafb",
+			id = "133106998846260"
+		},
+		{
+			name = "vai corinthians!!....",
+			id = "127012936767471"
+		},
+		{
+			name = "my sigman",
+			id = "103431815659907"
+		},
+		{
+			name = "mama",
+			id = "106850066985594"
+		},
+		{
+			name = "OH MY GOD",
+			id = "73349649774476"
+		},
+		{
+			name = "aahhh plankton meme",
+			id = "95982351322190"
+		},
+		{
+			name = "CHINABOY",
+			id = "84403553163931"
+		},
+		{
+			name = "PASTOR MIRIM E A LÍNGUA DOS ANJOS",
+			id = "71153532555470"
+		},
+		{
+			name = "Sai d3sgraç@",
+			id = "106973692977609"
+		},
+		{
+			name = "opa salve tudo bem?",
+			id = "80870678096428"
+		},
+		{
+			name = "OLHA O CARRO DO DANONE",
+			id = "110493863773948"
+		},
+		{
+			name = "Nãoooo, Nãoooo, Nãooo!!!!!",
+			id = "95825536480898"
+		},
+		{
+			name = "UM PÉ DE SIRIGUELA KK",
+			id = "112804043442210"
+		},
+		{
+			name = "e o carro da pamonha",
+			id = "94951629392683"
+		},
+		{
+			name = "BOM DIAAAAAAAAAA",
+			id = "136579844511260"
+		},
+		{
+			name = "ai-meu-chiclete",
+			id = "92911732806153"
+		},
+		{
+			name = "posso te ligar ou tua mulher...",
+			id = "103211341252816"
+		},
+		{
+			name = "Boa chi joga muito cara",
+			id = "110707564387669"
+		},
+		{
+			name = "Oqueee meme",
+			id = "120092799810101"
+		},
+		{
+			name = "kkk muito fei",
+			id = "79241074803021"
+		},
+		{
+			name = "lula cade o ze gotinha",
+			id = "86012585992725"
+		},
+		{
+			name = "morreu",
+			id = "8872409975"
+		},
+		{
+			name = "a-pia-ta-cheia-de-louca",
+			id = "98076927129047"
+		},
+		{
+			name = "Mahito killSong",
+			id = "128669424001766"
+		},
+		{
+			name = "Sucumba",
+			id = "7946300950"
+		},
+		{
+			name = "nem clicou o thurzin",
+			id = "84428355313544"
+		},
+		{
+			name = "fiui OLHA MENSAGEM",
+			id = "121668429878811"
+		},
+		{
+			name = "tooomeee",
+			id = "128319664118768"
+		},
+		{
+			name = "risada de ladrao",
+			id = "133065882609605"
+		},
+		{
+			name = "E o PIX nada ainda",
+			id = "113831443375212"
+		},
+		{
+			name = "Vo nada vo nada",
+			id = "89093085290586"
+		},
+		{
+			name = "Eli gosta",
+			id = "105012436535315"
+		},
+		{
+			name = "um cavalo de tres pernas?",
+			id = "8164241439"
+		},
+		{
+			name = "voces sao um bado de fdp",
+			id = "8232773326"
+		},
+		{
+			name = "HAHA TROLLEI ATÉ VOCÊ",
+			id = "7021794555"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "Calaboca Kenga",
+			id = "86494561679259"
+		},
+		{
+			name = "alvincut",
+			id = "88788640194373"
+		},
+		{
+			name = "e a risada faz como?",
+			id = "140713372459057"
+		},
+		{
+			name = "voce deve se m@t4",
+			id = "100227426848009"
+		},
+		{
+			name = "receba",
+			id = "94142662616215"
+		},
+		{
+			name = "UUIIII",
+			id = "73210569653520"
+		},
+		{
+			name = "sai",
+			id = "121169949217007"
+		},
+		{
+			name = "risada boa dms",
+			id = "127589011971759"
+		},
+		{
+			name = "vacilo perna de pau",
+			id = "106809680656199"
+		},
+		{
+			name = "gomo gomo no!!!",
+			id = "137067472449625"
+		},
+		{
+			name = "arroto",
+			id = "140203378050178"
+		},
+		{
+			name = "iraaaa",
+			id = "136752451575091"
+		},
+		{
+			name = "não fica se achando muito não",
+			id = "101588606280167"
+		},
+		{
+			name = "WhatsApp notificaçaoV1",
+			id = "107004225739474"
+		},
+		{
+			name = "WhatsApp notificaçaoV2",
+			id = "18850631582"
+		},
+		{
+			name = "SamsungV1",
+			id = "123767635061073"
+		},
+		{
+			name = "SamsungV2",
+			id = "96579234730244"
+		},
+		{
+			name = "Shiiii",
+			id = "120566727202986"
+		},
+		{
+			name = "ai_tomaa miku",
+			id = "139770074770361"
+		},
+		{
+			name = "Miku Miku",
+			id = "72812231495047"
+		},
+		{
+			name = "kuru_kuru",
+			id = "122465710753374"
+		},
+		{
+			name = "PM ROCAM",
+			id = "96161547081609"
+		},
+		{
+			name = "cavalo!!",
+			id = "78871573440184"
+		},
+		{
+			name = "deixa os garoto brinca",
+			id = "80291355054807"
+		},
+		{
+			name = "flamengo",
+			id = "137774355552052"
+		},
+		{
+			name = "sai do mei satnas",
+			id = "127944706557246"
+		},
+		{
+			name = "namoral agora e a hora",
+			id = "120677947987369"
+		},
+		{
+			name = "n pode me chutar pq seu celebro e burro",
+			id = "82284055473737"
+		},
+		{
+			name = "vc ta fudido vou te pegar",
+			id = "120214772725166"
+		},
+		{
+			name = "deley",
+			id = "102906880476838"
+		},
+		{
+			name = "Tu e um beta",
+			id = "130233956349541"
+		},
+		{
+			name = "Porfavor n tira eu nao",
+			id = "85321374020324"
+		},
+		{
+			name = "Olá beleza vc pode me dá muitos",
+			id = "74235334504693"
+		},
+		{
+			name = "Discord sus",
+			id = "122662798976905"
+		},
+		{
+			name = "rojao apito",
+			id = "6549021381"
+		},
+		{
+			name = "off",
+			id = "1778829098"
+		},
+		{
+			name = "Kazuma kazuma",
+			id = "127954653962405"
+		},
+		{
+			name = "sometourado",
+			id = "123592956882621"
+		},
+		{
+			name = "Estouradoespad",
+			id = "136179020015211"
+		},
+		{
+			name = "Alaku bommm",
+			id = "110796593805268"
+		},
+		{
+			name = "busss",
+			id = "139841197791567"
+		},
+		{
+			name = "Estourado wItb",
+			id = "137478052262430"
+		},
+		{
+			name = "sla",
+			id = "116672405522828"
+		},
+		{
+			name = "HA HA HA",
+			id = "138236682866721"
+		}
+	}
+}, "pankapakan")
+nestedTab:AddSection({ "throw terror or effect on the server" })
+createSound("Select a horror or effect", {
+	["efeito/terror"] = {
+		{
+			name = "jumpscar",
+			id = "91784486966761"
+		},
+		{
+			name = "n se preocupe",
+			id = "87041057113780"
+		},
+		{
+			name = "eles estao todos mortos",
+			id = "70605158718179"
+		},
+		{
+			name = "gritoestourado",
+			id = "7520729342"
+		},
+		{
+			name = "gritomedo",
+			id = "113029085566978"
+		},
+		{
+			name = "Nukesiren",
+			id = "9067330158"
+		},
+		{
+			name = "nuclear sirenv2",
+			id = "675587093"
+		},
+		{
+			name = "Alertescola",
+			id = "6607047008"
+		},
+		{
+			name = "Memealertsiren",
+			id = "8379374771"
+		},
+		{
+			name = "sirenv3",
+			id = "6766811806"
+		},
+		{
+			name = "Alarm estourAAAA...",
+			id = "93354528379052"
+		},
+		{
+			name = "MegaMan Alarm",
+			id = "1442382907"
+		},
+		{
+			name = "Alarm bookhaven",
+			id = "1526192493"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "alet malaysia",
+			id = "7714172940"
+		},
+		{
+			name = "Risada",
+			id = "79191730206814"
+		},
+		{
+			name = "Hahahah",
+			id = "90096947219465"
+		},
+		{
+			name = "scream",
+			id = "314568939"
+		},
+		{
+			name = "Terrified meme scream",
+			id = "5853668794"
+		},
+		{
+			name = "Sonic.exe Scream Effect",
+			id = "146563959"
+		},
+		{
+			name = "Demon Scream",
+			id = "2738830850"
+		},
+		{
+			name = "SCP-096 Scream (raging)",
+			id = "343430735"
+		},
+		{
+			name = "Nightmare Yelling Bursts",
+			id = "9125713501"
+		},
+		{
+			name = "HORROR SCREAM 07",
+			id = "9043345732"
+		},
+		{
+			name = "Female Scream Woman Screams",
+			id = "9114397912"
+		},
+		{
+			name = "Scream1",
+			id = "1319496541"
+		},
+		{
+			name = "Scream2",
+			id = "199978176"
+		},
+		{
+			name = "scary maze scream",
+			id = "270145703"
+		},
+		{
+			name = "SammyClassicSonicFan's Scream",
+			id = "143942090"
+		},
+		{
+			name = "FNAF 2 Death Scream",
+			id = "1572549161"
+		},
+		{
+			name = "cod zombie scream",
+			id = "8566359672"
+		},
+		{
+			name = "Slendytubbies- CaveTubby Scream",
+			id = "1482639185"
+		},
+		{
+			name = "FNAF 2 Death Scream",
+			id = "5537531920"
+		},
+		{
+			name = "HORROR SCREAM 15",
+			id = "9043346574"
+		},
+		{
+			name = "Jumpscare Scream",
+			id = "6150329916"
+		},
+		{
+			name = "FNaF: Security Breach",
+			id = "2050522547"
+		},
+		{
+			name = "llllllll",
+			id = "5029269312"
+		},
+		{
+			name = "loud jumpscare",
+			id = "7236490488"
+		},
+		{
+			name = "fnaf",
+			id = "6982454389"
+		},
+		{
+			name = "Pinkamena Jumpscare 1",
+			id = "192334186"
+		},
+		{
+			name = "Ennard Jumpscare 2",
+			id = "629526707"
+		},
+		{
+			name = "a sla medo dino",
+			id = "125506416092123"
+		},
+		{
+			name = "Backrooms Bacteria Pitfalls ",
+			id = "81325342128575"
+		},
+		{
+			name = "error Infinite",
+			id = "3893790326"
+		},
+		{
+			name = "Screaming Meme",
+			id = "107732411055226"
+		},
+		{
+			name = "Jumpscare - SCP CB",
+			id = "97098997494905"
+		},
+		{
+			name = "mirror jumpscare",
+			id = "80005164589425"
+		},
+		{
+			name = "PTLD-39 Jumpscare",
+			id = "5581462381"
+		},
+		{
+			name = "jumpscare:Play()",
+			id = "121519648044128"
+		},
+		{
+			name = "mimic jumpscare",
+			id = "91998575878959"
+		},
+		{
+			name = "DOORS Glitch Jumpscare Sound",
+			id = "96377507894391"
+		},
+		{
+			name = "FNAS 4 Nightmare Mario",
+			id = "99804224106385"
+		},
+		{
+			name = "Death House I Jumpscare Sound",
+			id = "8151488745"
+		},
+		{
+			name = "Shinky Jumpscare",
+			id = "123447772144411"
+		},
+		{
+			name = "FNaTI Jumpscare Oblitus casa",
+			id = "18338717319"
+		},
+		{
+			name = "fnaf jumpscare loadmode",
+			id = "18911896588"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		}
+	}
+}, "jumpscar")
+
+local function sendPlayerToolEvent(argument)
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local data = {
+		[1] = "ToolMusicText",
+		[2] = argument
+	}
+
+	ReplicatedStorage:WaitForChild("RE"):WaitForChild("PlayerToolEvent"):FireServer(unpack(data))
+
+	local secondaryData = {
+		[1] = "PickHouseMusicText",
+		[2] = argument
+	}
+
+	ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Player1sHous1e"):FireServer(unpack(secondaryData))
+
+	local alternateData = {
+		[1] = "PickingCarMusicText",
+		[2] = argument
+	}
+
+	ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Player1sCa1r"):FireServer(unpack(alternateData))
+
+	local additionalData = {
+		[1] = "PickingScooterMusicText",
+		[2] = argument
+	}
+
+	ReplicatedStorage:WaitForChild("RE"):WaitForChild("1NoMoto1rVehicle1s"):FireServer(unpack(additionalData))
+end
+
+innerTab:AddTextBox({
+	Name = "ID music",
+	PlaceholderText = "Enter ID and press Enter",
+	Callback = function(displayValue)
+		if displayValue and displayValue ~= "" then
+			sendPlayerToolEvent(tostring(displayValue))
+		end
+	end
+})
+
+local function handler(name, data, default)
+	local names = {}
+	local item = {}
+
+	for k, secondaryItem in pairs(data) do
+		for _, secondaryItem in ipairs(secondaryItem) do
+			if secondaryItem.name ~= "" then
+				table.insert(names, secondaryItem.name)
+				item[secondaryItem.name] = {
+					id = secondaryItem.id,
+					category = k
+				}
+			end
+		end
+	end
+
+	local function handler(displayValue)
+		sendPlayerToolEvent(tostring(displayValue))
+	end
+
+	innerTab:AddDropdown({
+		Name = name,
+		Description = "all",
+		Default = default,
+		Multi = false,
+		Options = names,
+		Callback = function(idFlag)
+			if idFlag and item[idFlag] then
+				local id = item[idFlag].id
+
+				if id and id ~= "" and id ~= "4354908569" then
+					handler(id)
+				end
+			end
+		end
+	})
+end
+
+handler("Hot", {
+	forro = {
+		{
+			name = "forró ja cansou",
+			id = "74812784884330"
+		},
+		{
+			name = "lenbro ate hoje",
+			id = "71531533552899"
+		},
+		{
+			name = "escolha certa",
+			id = "107088620814881"
+		},
+		{
+			name = "forró da rezenha",
+			id = "120973520531216"
+		},
+		{
+			name = "forró dudu",
+			id = "74404168179733"
+		},
+		{
+			name = "forró sao joao",
+			id = "106364874935196"
+		},
+		{
+			name = "forró engraçado paia",
+			id = "76524290482399"
+		},
+		{
+			name = "100% forro vaquejada",
+			id = "92295159623916"
+		},
+		{
+			name = "PASTOR MIRIM E A LÍNGUA DOS ANJOS",
+			id = "71153532555470"
+		},
+		{
+			name = "PARA NÃO ESQUECER QUEM SOMOS",
+			id = "88937498361674"
+		},
+		{
+			name = "Uno zero",
+			id = "112959083808887"
+		},
+		{
+			name = "Iate do neymar",
+			id = "135738534706063"
+		},
+		{
+			name = "Batidao na aldeia",
+			id = "79953696595578"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		}
+	}
+}, "Option 1")
+handler("Music of Memes", {
+	forro = {
+		{
+			name = "ANXIETY (Amapiano Re-fix)",
+			id = "101483901475189"
+		},
+		{
+			name = "Meu corpo, minhas regras",
+			id = "127587901595282"
+		},
+		{
+			name = "$$$$gg$$$$gg",
+			id = "137471775091253"
+		},
+		{
+			name = "Megalovania but its only the melodies",
+			id = "104500091160463"
+		},
+		{
+			name = "androphono strikes back",
+			id = "78312089943968"
+		},
+		{
+			name = "Bamm Bamm",
+			id = "128730685516895"
+		},
+		{
+			name = "chupa cabra",
+			id = "132890273173295"
+		},
+		{
+			name = "longe de mais",
+			id = "124478512057763"
+		},
+		{
+			name = "Garoto de Copacabana",
+			id = "135648634110254"
+		},
+		{
+			name = "CELL!",
+			id = "117634275895085"
+		},
+		{
+			name = "Boa vibe em Ubatuba",
+			id = "139059061493558"
+		},
+		{
+			name = "SLIP AWAY",
+			id = "126152928520174"
+		},
+		{
+			name = "Alone in Motion",
+			id = "122379348696948"
+		},
+		{
+			name = "Fade Away",
+			id = "81002139735874"
+		},
+		{
+			name = "Wounds & Wishes",
+			id = "109347979566607"
+		},
+		{
+			name = "Ascensão do Monarca",
+			id = "101864243033211"
+		},
+		{
+			name = "carro do ovo",
+			id = "3148329638"
+		},
+		{
+			name = "ingles bus (fling ou kill bus)",
+			id = "123268013026823"
+		},
+		{
+			name = "MIKU MIKU HATSUNE",
+			id = "112783541496955"
+		},
+		{
+			name = "Five Nights at Freddy's",
+			id = "110733765539890"
+		},
+		{
+			name = "Rat Dance",
+			id = "133496635668044"
+		},
+		{
+			name = "Escalando a Seleção Brasileira para a Copa",
+			id = "116546457407236"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		}
+	}
+}, "Option 1")
+handler("Funk", {
+	Funk = {
+		{
+			name = "sua mulher funk",
+			id = "90844637105538"
+		},
+		{
+			name = "fuga na viatura",
+			id = "131891110268352"
+		},
+		{
+			name = "funkphonk fumando verde",
+			id = "112143944982807"
+		},
+		{
+			name = "cauma xmara",
+			id = "95664293972405"
+		},
+		{
+			name = "que que sharke",
+			id = "129546408528391"
+		},
+		{
+			name = "Il Cacto Hipopotamo FUNK",
+			id = "104491656009142"
+		},
+		{
+			name = "Espressora Signora FUNK",
+			id = "123394392737234"
+		},
+		{
+			name = "trippi troop funk",
+			id = "73049389767013"
+		},
+		{
+			name = "bombini funkphonk",
+			id = "88814770244609"
+		},
+		{
+			name = "pre treino",
+			id = "136869502216760"
+		},
+		{
+			name = "CVRL",
+			id = "124244582950595"
+		},
+		{
+			name = "batida Brega Violino (Beat Brega Funk)",
+			id = "99399643204701"
+		},
+		{
+			name = "Dança do Canguru (Pke Gaz1nh)",
+			id = "86876136192157"
+		},
+		{
+			name = "espere 30segundos!! Ondas sonoras",
+			id = "127757321382838"
+		},
+		{
+			name = "MONTAGEM ARABIANA (Pke Gaz1nh)",
+			id = "78076624091098"
+		},
+		{
+			name = "Manda o papo (NGI)",
+			id = "132642647937688"
+		},
+		{
+			name = "Viver bem",
+			id = "82805460494325"
+		},
+		{
+			name = "Faixa estronda",
+			id = "121187736532042"
+		},
+		{
+			name = "Ritmo Pixelado",
+			id = "93928823862203"
+		},
+		{
+			name = "Viagem Sonora",
+			id = "79349174602261"
+		},
+		{
+			name = "Melodia Virtual",
+			id = "139147474886402"
+		},
+		{
+			name = "Melodia Serena",
+			id = "97011217688307"
+		},
+		{
+			name = "SENTA",
+			id = "124085422276732"
+		},
+		{
+			name = "TUNG TUNG TUNG TUNG SAHUR PHONK BRASILEIRO",
+			id = "120353876640055"
+		},
+		{
+			name = "crazy-lol",
+			id = "106958630419629"
+		},
+		{
+			name = "V7",
+			id = "80348640826643"
+		},
+		{
+			name = "UIUAH",
+			id = "82894376737849"
+		},
+		{
+			name = "meta ritmo",
+			id = "110091098283354"
+		},
+		{
+			name = "CAPPUCCINO ASSASSINO (SPEDUP)",
+			id = "132733033157915"
+		},
+		{
+			name = "haha (NGI)",
+			id = "122114766584918"
+		},
+		{
+			name = "DO PO",
+			id = "114207745067816"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		}
+	}
+}, "Option 1")
+handler("Phonk", {
+	phonk = {
+		{
+			name = "wyles",
+			id = "85385155970460"
+		},
+		{
+			name = "phonk kawai",
+			id = "91502410121438"
+		},
+		{
+			name = "querendo da a bucet@",
+			id = "72720721570850"
+		},
+		{
+			name = "vem no pocpoc",
+			id = "102333419023382"
+		},
+		{
+			name = "tatiu wim",
+			id = "122871512353520"
+		},
+		{
+			name = "novinha sapeca",
+			id = "111668097052966"
+		},
+		{
+			name = "novinha representa",
+			id = "93786060174790"
+		},
+		{
+			name = "phonk1",
+			id = "77501611905348"
+		},
+		{
+			name = "phonk2",
+			id = "126887144190812"
+		},
+		{
+			name = "phonk osadia",
+			id = "88033569921555"
+		},
+		{
+			name = "phonk sarra",
+			id = "132436320685732"
+		},
+		{
+			name = "relaionamento sem crush",
+			id = "105832154444494"
+		},
+		{
+			name = "phonk3",
+			id = "90323407842935"
+		},
+		{
+			name = "novinha dançapanpa",
+			id = "132245626038510"
+		},
+		{
+			name = "phonk sexoagreçivo",
+			id = "111995323199676"
+		},
+		{
+			name = "phonk4",
+			id = "115016589376700"
+		},
+		{
+			name = "phonk5",
+			id = "118740708757685"
+		},
+		{
+			name = "phonk6",
+			id = "139435437308948"
+		},
+		{
+			name = "phonk chapaquente",
+			id = "109189438638906"
+		},
+		{
+			name = "phonk rajada",
+			id = "105126065014034"
+		},
+		{
+			name = "rede globo",
+			id = "138487820505005"
+		},
+		{
+			name = "phonk indiano",
+			id = "87968531262747"
+		},
+		{
+			name = "vapo do vapo",
+			id = "106317184644394"
+		},
+		{
+			name = "tutatatutata",
+			id = "112068892721408"
+		},
+		{
+			name = "phonk slower",
+			id = "122852029094656"
+		},
+		{
+			name = "phonk9",
+			id = "91760524161503"
+		},
+		{
+			name = "phonk10",
+			id = "73140398421340"
+		},
+		{
+			name = "phonk11",
+			id = "137962454483542"
+		},
+		{
+			name = "phonk12",
+			id = "84733736048142"
+		},
+		{
+			name = "phonk13",
+			id = "106322173003761"
+		},
+		{
+			name = "phonk14",
+			id = "94604796823780"
+		},
+		{
+			name = "phonk15",
+			id = "118063577904953"
+		},
+		{
+			name = "phonk16",
+			id = "115567432786512"
+		},
+		{
+			name = "phonk toq",
+			id = "71304501822029"
+		},
+		{
+			name = "phonk hey",
+			id = "132218979961283"
+		},
+		{
+			name = "phonk17",
+			id = "102708912256857"
+		},
+		{
+			name = "phonk18",
+			id = "140642559093189"
+		},
+		{
+			name = "phonk neve",
+			id = "13530439660"
+		},
+		{
+			name = "phonk19",
+			id = "87863924786534"
+		},
+		{
+			name = "phonk20",
+			id = "133135085604736"
+		},
+		{
+			name = "phonk lento",
+			id = "97258811783169"
+		},
+		{
+			name = "phonk21",
+			id = "92308400487695"
+		},
+		{
+			name = "tipo wym",
+			id = "88064647826500"
+		},
+		{
+			name = "estouradassa1",
+			id = "92175624643620"
+		},
+		{
+			name = "estouradassa2",
+			id = "108099943758978"
+		},
+		{
+			name = "Naaaaa",
+			id = "109784877184952"
+		},
+		{
+			name = "trem",
+			id = "114608169341947"
+		},
+		{
+			name = "eoropa",
+			id = "111346133543699"
+		},
+		{
+			name = "atimosphekika",
+			id = "77857496821844"
+		},
+		{
+			name = "phonk ALL THE TIME",
+			id = "123809083385992"
+		},
+		{
+			name = "Lifelong Memory",
+			id = "81929101024622"
+		},
+		{
+			name = "Automotivo Blondie (Pke Gaz1nh)",
+			id = "74564219749776"
+		},
+		{
+			name = "\239\191\189\239\191\189วัสดีคนไทย v2",
+			id = "118225359190317"
+		},
+		{
+			name = "MTG TU VAI SENTAR (Pke Gaz1nh)",
+			id = "115317874112657"
+		},
+		{
+			name = "SARRA FUNK",
+			id = "96249826607044"
+		},
+		{
+			name = "Catuquanvan",
+			id = "88038595663211"
+		},
+		{
+			name = "F-D-1 (slowed)",
+			id = "124958445624871"
+		},
+		{
+			name = "Sucessagem",
+			id = "88551699463723"
+		},
+		{
+			name = "ILOVE phonksla",
+			id = "82148953715595"
+		},
+		{
+			name = "SPEED SLIDE",
+			id = "118959437310311"
+		},
+		{
+			name = "TOMA FUNK PHONK",
+			id = "126291069838831"
+		},
+		{
+			name = "PASSO BEM SOLTO X NEW JAZZ",
+			id = "122706595087279"
+		},
+		{
+			name = "MONTAGEM BIONICA DIAMANTE",
+			id = "122338822665007"
+		},
+		{
+			name = "BALA SELVAGEM!",
+			id = "96180057167470"
+		},
+		{
+			name = "Luz <3",
+			id = "74281337525581"
+		},
+		{
+			name = "COMO TU",
+			id = "86928685812280"
+		},
+		{
+			name = "MONTAGEM SOLAR TROPICANO (SPEED UP)",
+			id = "116461681407294"
+		},
+		{
+			name = "MONTAGEM SOLAR TROPICANO (SLOWED)",
+			id = "109308273341422"
+		},
+		{
+			name = "YO DE TI",
+			id = "125181345407169"
+		},
+		{
+			name = "Beauty, (Phonk), Super sped up",
+			id = "71123357599630"
+		},
+		{
+			name = "MONTAGEM BOOMBOX DO MALA FUNK",
+			id = "86537505028256"
+		},
+		{
+			name = "BRAZIL DO FUNK",
+			id = "133498554139200"
+		},
+		{
+			name = "BRR BRR PATAPIM FUNK",
+			id = "117170901476451"
+		},
+		{
+			name = "MONTAGEM TERRA BELA FUNK",
+			id = "134770548505933"
+		},
+		{
+			name = "FUNK DO RAVE 1.0",
+			id = "137135395010424"
+		},
+		{
+			name = " Portao Funk",
+			id = "70900514961735"
+		},
+		{
+			name = " Espaço Funk",
+			id = "110519906029322"
+		},
+		{
+			name = " FUTABA",
+			id = "91834632690710"
+		},
+		{
+			name = " Melódica Explosão De Melodia",
+			id = "98371771055411"
+		},
+		{
+			name = " RASGO",
+			id = "98267810117949"
+		},
+		{
+			name = " HIPNOTIZA",
+			id = "117668905142866"
+		},
+		{
+			name = "CRISTAL NOTURNO",
+			id = "103695219371872"
+		},
+		{
+			name = " SKY HIGH",
+			id = "123517126955383"
+		},
+		{
+			name = "MIKU top",
+			id = "102771149931910"
+		},
+		{
+			name = " ACABU SO FUNK",
+			id = "127870227978818"
+		},
+		{
+			name = "CREATIFE FUNK",
+			id = "130525387712209"
+		},
+		{
+			name = "GOTH FUNK",
+			id = "97662362226511"
+		},
+		{
+			name = "PORTUGESE FUNK",
+			id = "125858109122379"
+		},
+		{
+			name = "SUBURBANA",
+			id = "139825057894568"
+		},
+		{
+			name = "ESPERA LA NOCHE FUNK",
+			id = "139768056738146"
+		},
+		{
+			name = "SIN PERMISO FUNK",
+			id = "92572896648274"
+		},
+		{
+			name = "MONTAGEM DACE RAT",
+			id = "98711199754623"
+		},
+		{
+			name = " LOVELY FUNK",
+			id = "130633105268814"
+		},
+		{
+			name = "STORYMODECOOL",
+			id = "87115976125426"
+		},
+		{
+			name = "BLACK COFFEE FUNK",
+			id = "82705137378395"
+		},
+		{
+			name = "KOBALT",
+			id = "79381341943021"
+		},
+		{
+			name = " andante bacterial",
+			id = "105882833374061"
+		},
+		{
+			name = "ANGEL Speed Up",
+			id = "139593870988593"
+		},
+		{
+			name = "LUTA ÉPICA",
+			id = "73966367524216"
+		},
+		{
+			name = "MALDITA",
+			id = "133814632960968"
+		},
+		{
+			name = "DA ZONA NTJ VERSON",
+			id = "105770593501071"
+		},
+		{
+			name = "HIPNOTIZA",
+			id = "132015050363205"
+		},
+		{
+			name = "MIDZUKI speed up",
+			id = "129151948619922"
+		},
+		{
+			name = "movimenta funk",
+			id = "114994598691121"
+		},
+		{
+			name = "CRISTAL",
+			id = "103445348511856"
+		},
+		{
+			name = "Letero funkphonk",
+			id = "99409598156364"
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		},
+		{
+			name = "",
+			id = ""
+		}
+	}
+}, "Option 1")
+innerTab:AddButton({
+	Name = "Stop",
+	Description = "ALL music",
+	Callback = function()
+		sendPlayerToolEvent("")
+	end
+})
+
+local innerPlayers = game:GetService("Players")
+local workspace = game:GetService("Workspace")
+local secondaryRunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local backpackContainer = innerPlayers.LocalPlayer
+local firstChild = nil
+local innerFlag = false
+local outerFlag = false
+local createBodyVelocityFlag = false
+local connection = nil
+local alternateConnection = nil
+local Position = nil
+local HumanoidRootPartPosition = nil
+local createBodyVelocityData = {}
+local previousFlag = nil
+local capturedState = nil
+local secondaryFirstChild = nil
+local Couch = nil
+local updateCameraSubjectFlag = false
+local capturedFirstChild = nil
+local additionalConnection = nil
+local updateSteppedConnectionCondition = nil
+local RemoteEvent = Instance.new("RemoteEvent")
+
+RemoteEvent.Name = "SetNetworkOwnerEvent_" .. tostring(math.random(1000, 9999))
+RemoteEvent.Parent = ReplicatedStorage
+
+local secondaryText = "\r\n    local ReplicatedStorage = game:GetService(\"ReplicatedStorage\")\r\n    local event = ReplicatedStorage:WaitForChild(\"" .. RemoteEvent.Name .. "\")\r\n    \r\n    event.OnServerEvent:Connect(function(player, part, networkOwner)\r\n        if part and part:IsA(\"BasePart\") then\r\n            pcall(function()\r\n                part:SetNetworkOwner(networkOwner)\r\n                part.Anchored = false\r\n                part.CanCollide = true\r\n                part.CanTouch = true\r\n            end)\r\n        end\r\n    end)\r\n"
+
+pcall(function()
+	loadstring(secondaryText)()
+end)
+
+local function updateSteppedConnectionDisabled()
+	local CarClient = backpackContainer:WaitForChild("Backpack"):FindFirstChild("CarClient")
+
+	if CarClient and CarClient:IsA("LocalScript") then
+		CarClient.Disabled = true
+	end
+end
+local function handleSearchableText()
+	local playerNames = {}
+
+	for _, player in ipairs(innerPlayers:GetPlayers()) do
+		if player ~= backpackContainer then
+			table.insert(playerNames, player.Name)
+		end
+	end
+
+	return playerNames
+end
+local function secondaryHandler(addDropdown, condition)
+	pcall(function()
+		local searchQuery = addDropdown:Get()
+		local searchableText = handleSearchableText()
+
+		addDropdown:Set(searchableText)
+
+		if not searchQuery or table.find(searchableText, searchQuery) then
+			if searchQuery and table.find(searchableText, searchQuery) then
+				addDropdown:Set(searchQuery)
+			end
+		else
+			addDropdown:Set("")
+			firstChild = nil
+
+			if updateCameraSubjectFlag then
+				stopSpectating()
+
+				if condition then
+					pcall(function()
+						condition:Set(false)
+					end)
+				end
+			end
+
+			if createBodyVelocityFlag or innerFlag or outerFlag then
+				createBodyVelocityFlag = false
+				innerFlag = false
+				outerFlag = false
+
+				if connection then
+					connection:Disconnect()
+					connection = nil
+				end
+
+				if alternateConnection then
+					alternateConnection:Disconnect()
+					alternateConnection = nil
+				end
+
+				if updateSteppedConnectionCondition then
+					pcall(function()
+						updateSteppedConnectionCondition:Set(false)
+					end)
+				end
+			end
+		end
+	end)
+end
+local function updateHeartbeatConnection(updateHeartbeatConnectionFlag)
+	if additionalConnection then
+		additionalConnection:Disconnect()
+		additionalConnection = nil
+	end
+
+	local firstChild = innerPlayers:FindFirstChild(updateHeartbeatConnectionFlag)
+
+	if not firstChild or firstChild == backpackContainer then
+		updateCameraSubjectFlag = false
+		capturedFirstChild = nil
+	else
+		capturedFirstChild = firstChild
+		updateCameraSubjectFlag = true
+
+		local function updateCameraSubject()
+			if updateCameraSubjectFlag and capturedFirstChild then
+				if not capturedFirstChild.Character or not capturedFirstChild.Character:FindFirstChild("Humanoid") then
+					workspace.CurrentCamera.CameraSubject = nil
+				else
+					workspace.CurrentCamera.CameraSubject = capturedFirstChild.Character.Humanoid
+				end
+
+				return
+			end
+		end
+
+		updateCameraSubject()
+		additionalConnection = secondaryRunService.Heartbeat:Connect(function()
+			if updateCameraSubjectFlag then
+				pcall(updateCameraSubject)
+
+				return
+			end
+
+			additionalConnection:Disconnect()
+			additionalConnection = nil
+		end)
+		capturedFirstChild.CharacterAdded:Connect(function()
+			if updateCameraSubjectFlag then
+				updateCameraSubject()
+			end
+		end)
+	end
+end
+local function secondaryUpdateInstanceProperties()
+	if additionalConnection then
+		additionalConnection:Disconnect()
+		additionalConnection = nil
+	end
+
+	updateCameraSubjectFlag = false
+	capturedFirstChild = nil
+
+	if not backpackContainer.Character or not backpackContainer.Character:FindFirstChild("Humanoid") then
+		workspace.CurrentCamera.CameraSubject = nil
+		workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+	else
+		workspace.CurrentCamera.CameraSubject = backpackContainer.Character.Humanoid
+		workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+	end
+end
+local function updateTeleportToSelectedPlayer(text)
+	local firstChild = innerPlayers:FindFirstChild(text)
+
+	if not firstChild or not backpackContainer.Character or not backpackContainer.Character:FindFirstChild("HumanoidRootPart") or not firstChild.Character or not firstChild.Character:FindFirstChild("HumanoidRootPart") then
+		print("Jogador ou personagem não encontrado para teletransporte.")
+	else
+		local HumanoidRootPart = backpackContainer.Character:FindFirstChild("HumanoidRootPart")
+		local Humanoid = backpackContainer.Character:FindFirstChild("Humanoid")
+
+		if not HumanoidRootPart or not Humanoid then
+			print("Seu personagem não está totalmente carregado para teletransporte.")
+
+			return
+		end
+
+		for _, descendant in ipairs(backpackContainer.Character:GetDescendants()) do
+			if descendant:IsA("BasePart") then
+				descendant.Velocity = Vector3.zero
+				descendant.RotVelocity = Vector3.zero
+				descendant.Anchored = true
+			end
+		end
+
+		local ok, result = pcall(function()
+			HumanoidRootPart.CFrame = CFrame.new(firstChild.Character.HumanoidRootPart.Position + Vector3.new(0, 2, 0))
+		end)
+
+		if not ok then
+			warn("Erro ao teletransportar: " .. tostring(result))
+
+			return
+		end
+
+		Humanoid.Sit = false
+		Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+		task.wait(0.5)
+
+		for _, descendant in ipairs(backpackContainer.Character:GetDescendants()) do
+			if descendant:IsA("BasePart") then
+				descendant.Anchored = false
+				descendant.Velocity = Vector3.zero
+				descendant.RotVelocity = Vector3.zero
+			end
+		end
+
+		print("Teletransportado para o jogador: " .. text .. " com ancoragem segura.")
+	end
+end
+
+backpackContainer.CharacterAdded:Connect(function(_)
+	if updateCameraSubjectFlag then
+		secondaryUpdateInstanceProperties()
+		pcall(function()
+			SpectateToggleTab10:Set(false)
+		end)
+	end
+end)
+
+local okFlag = nil
+local alternateAddDropdown = outerTab:AddDropdown({
+	Name = "Select Player",
+	Description = "Select Player To Fling",
+	Default = "",
+	Multi = false,
+	Options = handleSearchableText(),
+	Flag = "player list",
+	Callback = function(teleportToSelectedPlayerFlag)
+		okFlag = teleportToSelectedPlayerFlag
+
+		if teleportToSelectedPlayerFlag ~= "" and teleportToSelectedPlayerFlag ~= nil then
+			firstChild = innerPlayers:FindFirstChild(teleportToSelectedPlayerFlag)
+
+			if updateCameraSubjectFlag then
+				secondaryUpdateInstanceProperties()
+				updateHeartbeatConnection(teleportToSelectedPlayerFlag)
+			end
+		else
+			firstChild = nil
+
+			if createBodyVelocityFlag or innerFlag or outerFlag then
+				createBodyVelocityFlag = false
+				innerFlag = false
+				outerFlag = false
+
+				if connection then
+					connection:Disconnect()
+				end
+
+				if alternateConnection then
+					alternateConnection:Disconnect()
+				end
+
+				if updateSteppedConnectionCondition then
+					pcall(function()
+						updateSteppedConnectionCondition:Set(false)
+					end)
+				end
+			end
+
+			if updateCameraSubjectFlag then
+				secondaryUpdateInstanceProperties()
+			end
+		end
+	end
+})
+
+function onPlayerAdded()
+	local playerNames = {}
+
+	for _, player in ipairs(innerPlayers:GetPlayers()) do
+		if player.Name ~= backpackContainer.Name then
+			table.insert(playerNames, player.Name)
+		end
+	end
+
+	alternateAddDropdown:Set(playerNames)
+end
+
+outerTab:AddButton({
+	"Refresh list",
+	function()
+		onPlayerAdded()
+	end
+})
+onPlayerAdded()
+outerTab:AddButton({
+	Title = "Teleport To Selected Player",
+	Desc = "",
+	Callback = function()
+		local teleportToSelectedPlayerFlag = okFlag
+
+		if not teleportToSelectedPlayerFlag or teleportToSelectedPlayerFlag == "" then
+			print("Selecione um jogador antes de teletransportar.")
+		else
+			local ok, result = pcall(updateTeleportToSelectedPlayer, teleportToSelectedPlayerFlag)
+
+			if not ok then
+				warn("Erro ao teletransportar: " .. tostring(result))
+			end
+		end
+	end
+})
+
+local addToggle = outerTab:AddToggle({
+	Name = "View Selected Player",
+	Description = "",
+	Default = false,
+	Callback = function(flag)
+		if not flag then
+			pcall(secondaryUpdateInstanceProperties)
+		elseif not firstChild then
+			SpectateToggleTab10:Set(false)
+		else
+			pcall(updateHeartbeatConnection, firstChild.Name)
+		end
+	end
+})
+
+innerPlayers.PlayerRemoving:Connect(function(player)
+	secondaryHandler(alternateAddDropdown, addToggle)
+
+	if player == firstChild then
+		firstChild = nil
+
+		if updateCameraSubjectFlag then
+			secondaryUpdateInstanceProperties()
+		end
+
+		if createBodyVelocityFlag then
+			createBodyVelocityFlag = false
+
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if alternateConnection then
+				alternateConnection:Disconnect()
+				alternateConnection = nil
+			end
+
+			if updateSteppedConnectionCondition then
+				updateSteppedConnectionCondition:Set(false)
+			end
+		end
+
+		addToggle:Set(false)
+		alternateAddDropdown:Set("")
+	end
+end)
+innerPlayers.PlayerAdded:Connect(function()
+	task.wait(1)
+	secondaryHandler(alternateAddDropdown, addToggle)
+end)
+secondaryHandler(alternateAddDropdown, addToggle)
+outerTab:AddSection({ "Kill" })
+outerTab:AddDropdown({
+	Name = "Select Method To (Pull/Kill)",
+	Description = "",
+	Options = {
+		"Sofa",
+		"Bus"
+	},
+	Callback = function(flag)
+		previousFlag = flag
+	end
+})
+
+local function handleSteppedConnection()
+	local Backpack = backpackContainer:WaitForChild("Backpack")
+	local couch = Backpack:FindFirstChild("Couch") or backpackContainer.Character:FindFirstChild("Couch")
+
+	if not couch then
+		local steppedConnectionData = {
+			[1] = "PickingTools",
+			[2] = "Couch"
+		}
+
+		if not pcall(function()
+			ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Too1l"):InvokeServer(unpack(steppedConnectionData))
+		end) then
+			return false
+		end
+
+		repeat
+			couch = Backpack:FindFirstChild("Couch")
+			task.wait()
+		until couch or task.wait(5)
+
+		if not couch then
+			return false
+		end
+	end
+
+	if couch.Parent ~= backpackContainer.Character then
+		couch.Parent = backpackContainer.Character
+	end
+
+	return true
+end
+local function alternateHandler(firstChild)
+	if firstChild and firstChild.Character and backpackContainer.Character then
+		if handleSteppedConnection() then
+			innerFlag = true
+			Position = backpackContainer.Character:FindFirstChild("HumanoidRootPart").Position
+
+			return
+		end
+
+		return
+	end
+end
+local function additionalHandler(firstChild)
+	if firstChild and firstChild.Character and backpackContainer.Character then
+		if handleSteppedConnection() then
+			outerFlag = true
+			Position = backpackContainer.Character:FindFirstChild("HumanoidRootPart").Position
+
+			return
+		end
+
+		return
+	end
+end
+local function updateSteppedConnection(updateSteppedConnectionFlag)
+	if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character and backpackContainer.Character then
+		local Character = backpackContainer.Character
+		local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+		local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+
+		if Humanoid and HumanoidRootPart then
+			HumanoidRootPartPosition = HumanoidRootPart.Position
+			pcall(function()
+				HumanoidRootPart.Anchored = true
+				HumanoidRootPart.CFrame = CFrame.new(Vector3.new(1181.83, 76.08, -1158.83))
+				task.wait(0.2)
+				HumanoidRootPart.Velocity = Vector3.zero
+				HumanoidRootPart.RotVelocity = Vector3.zero
+				HumanoidRootPart.Anchored = false
+
+				if Humanoid then
+					Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end)
+			task.wait(0.5)
+			updateSteppedConnectionDisabled()
+
+			local updateSteppedConnectionData = {
+				[1] = "DeleteAllVehicles"
+			}
+
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			updateSteppedConnectionData = {
+				[1] = "PickingCar",
+				[2] = "SchoolBus"
+			}
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			task.wait(1)
+
+			local Vehicles = workspace:FindFirstChild("Vehicles")
+
+			if Vehicles then
+				local firstChild = Vehicles:FindFirstChild(backpackContainer.Name .. "Car")
+
+				if firstChild then
+					pcall(function()
+						HumanoidRootPart.Anchored = true
+						HumanoidRootPart.CFrame = CFrame.new(Vector3.new(1171.15, 79.45, -1166.2))
+						task.wait(0.2)
+						HumanoidRootPart.Velocity = Vector3.zero
+						HumanoidRootPart.RotVelocity = Vector3.zero
+						HumanoidRootPart.Anchored = false
+						Humanoid:ChangeState(Enum.HumanoidStateType.Seated)
+					end)
+
+					local timestamp = tick()
+
+					repeat
+						task.wait()
+
+						if tick() - timestamp > 10 then
+							return
+						end
+					until Humanoid.Sit
+
+					for _, descendant in ipairs(firstChild:GetDescendants()) do
+						if descendant:IsA("BasePart") then
+							descendant.CanCollide = false
+							pcall(function()
+								descendant:SetNetworkOwner(nil)
+							end)
+						end
+					end
+
+					createBodyVelocityFlag = true
+					connection = secondaryRunService.Stepped:Connect(function()
+						if createBodyVelocityFlag then
+							for _, descendant in ipairs(Character:GetDescendants()) do
+								if descendant:IsA("BasePart") then
+									descendant.CanCollide = false
+								end
+							end
+
+							return
+						end
+					end)
+
+					local updateSteppedConnectionNumber = tick()
+					local number = 0.05
+					local secondaryUpdateSteppedConnectionNumber = tick()
+
+					alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+						if createBodyVelocityFlag then
+							local humanoidContainer = updateSteppedConnectionFlag.Character or updateSteppedConnectionFlag.CharacterAdded:Wait()
+							local humanoidRootPart = humanoidContainer:FindFirstChild("HumanoidRootPart")
+							local humanoid = humanoidContainer:FindFirstChild("Humanoid")
+
+							if humanoidRootPart and humanoid then
+								if HumanoidRootPart and Humanoid then
+									if not (tick() - updateSteppedConnectionNumber < number) then
+										updateSteppedConnectionNumber = tick()
+
+										local sumNumber = Vector3.new(math.random(-10, 10), 0, math.random(-10, 10))
+
+										pcall(function()
+											local updateSteppedConnectionNumber = humanoidRootPart.Position + sumNumber
+
+											firstChild:PivotTo(CFrame.new(updateSteppedConnectionNumber) * CFrame.Angles(math.rad(workspace.DistributedGameTime * 12000), math.rad(workspace.DistributedGameTime * 15000), math.rad(workspace.DistributedGameTime * 18000)))
+										end)
+
+										local updateSteppedConnectionFlag = false
+
+										for _, descendant in ipairs(firstChild:GetDescendants()) do
+											if (descendant:IsA("Seat") or descendant:IsA("VehicleSeat")) and descendant.Name ~= "VehicleSeat" and humanoid == descendant.Occupant then
+												updateSteppedConnectionFlag = true
+
+												break
+											end
+										end
+
+										if updateSteppedConnectionFlag or tick() - secondaryUpdateSteppedConnectionNumber > 10 then
+											createBodyVelocityFlag = false
+
+											if connection then
+												connection:Disconnect()
+												connection = nil
+											end
+
+											if alternateConnection then
+												alternateConnection:Disconnect()
+												alternateConnection = nil
+											end
+
+											pcall(function()
+												firstChild:PivotTo(CFrame.new(Vector3.new(-76.6, -401.97, -84.26)))
+											end)
+											task.wait(0.5)
+											updateSteppedConnectionDisabled()
+
+											local updateSteppedConnectionData = {
+												[1] = "DeleteAllVehicles"
+											}
+
+											pcall(function()
+												ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+											end)
+
+											if Character then
+												local humanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+
+												if humanoidRootPart and HumanoidRootPartPosition then
+													pcall(function()
+														humanoidRootPart.Anchored = true
+														humanoidRootPart.CFrame = CFrame.new(HumanoidRootPartPosition + Vector3.new(0, 5, 0))
+														task.wait(0.2)
+														humanoidRootPart.Velocity = Vector3.zero
+														humanoidRootPart.RotVelocity = Vector3.zero
+														humanoidRootPart.Anchored = false
+
+														if Humanoid then
+															Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+														end
+													end)
+												end
+											end
+
+											if Character then
+												for _, descendant in ipairs(Character:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = true
+														descendant.Velocity = Vector3.zero
+														descendant.RotVelocity = Vector3.zero
+													end
+												end
+											end
+
+											local updateSteppedConnectionCondition = Character and Character:FindFirstChild("Humanoid")
+
+											if updateSteppedConnectionCondition then
+												updateSteppedConnectionCondition:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+											end
+
+											for _, descendant in ipairs(workspace:GetDescendants()) do
+												if descendant:IsA("Seat") or descendant:IsA("VehicleSeat") then
+													descendant.Disabled = false
+												end
+											end
+
+											pcall(function()
+												ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clothe1s"):FireServer("CharacterSizeUp", 1)
+											end)
+										end
+
+										return
+									end
+
+									return
+								end
+
+								createBodyVelocityFlag = false
+
+								return
+							end
+
+							return
+						end
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+
+local condition = nil
+
+if condition then
+	condition:Disconnect()
+end
+
+secondaryRunService.Heartbeat:Connect(function()
+	if (innerFlag or outerFlag) and (firstChild and backpackContainer.Character and backpackContainer.Character:FindFirstChild("HumanoidRootPart") and firstChild.Character and firstChild.Character:FindFirstChild("HumanoidRootPart")) then
+		pcall(function()
+			local position = firstChild.Character.HumanoidRootPart.Position
+
+			backpackContainer.Character:SetPrimaryPartCFrame(CFrame.new(position) * CFrame.Angles(math.rad(workspace.DistributedGameTime * 12000), math.rad(workspace.DistributedGameTime * 15000), math.rad(workspace.DistributedGameTime * 18000)))
+		end)
+	end
+end)
+
+local secondaryCondition = nil
+
+if secondaryCondition then
+	secondaryCondition:Disconnect()
+end
+
+secondaryRunService.Heartbeat:Connect(function()
+	if (innerFlag or outerFlag) and (firstChild and firstChild.Character and firstChild.Character:FindFirstChild("Humanoid")) then
+		pcall(function()
+			if firstChild.Character.Humanoid.Sit then
+				if innerFlag and backpackContainer.Character and backpackContainer.Character:FindFirstChild("HumanoidRootPart") then
+					backpackContainer.Character:SetPrimaryPartCFrame(CFrame.new(0, -500, 0))
+					task.wait(0.5)
+					ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Too1l"):InvokeServer("PickingTools", "Couch")
+					task.wait(1)
+				end
+
+				innerFlag = false
+				outerFlag = false
+
+				if backpackContainer.Character and backpackContainer.Character:FindFirstChild("HumanoidRootPart") and Position then
+					local HumanoidRootPart = backpackContainer.Character:FindFirstChild("HumanoidRootPart")
+					local Humanoid = backpackContainer.Character:FindFirstChild("Humanoid")
+
+					if HumanoidRootPart then
+						HumanoidRootPart.Anchored = true
+						HumanoidRootPart.CFrame = CFrame.new(Position + Vector3.new(0, 5, 0))
+						task.wait(0.2)
+						HumanoidRootPart.Velocity = Vector3.zero
+						HumanoidRootPart.RotVelocity = Vector3.zero
+						HumanoidRootPart.Anchored = false
+
+						if Humanoid then
+							Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+						end
+					end
+
+					Position = nil
+				end
+			end
+		end)
+	end
+end)
+outerTab:AddButton({
+	Name = "Start The Kill",
+	Description = "",
+	Callback = function()
+		if not innerFlag and not outerFlag and not createBodyVelocityFlag then
+			if firstChild and previousFlag then
+				if previousFlag ~= "Sofá" then
+					if previousFlag == "\239\191\189nibus" then
+						updateSteppedConnection(firstChild)
+					end
+				else
+					alternateHandler(firstChild)
+				end
+
+				return
+			end
+
+			return
+		end
+	end
+})
+outerTab:AddButton({
+	Name = "Pull",
+	Description = "",
+	Callback = function()
+		if not innerFlag and not outerFlag and not createBodyVelocityFlag then
+			if firstChild and previousFlag and previousFlag == "Sofá" then
+				additionalHandler(firstChild)
+
+				return
+			end
+
+			return
+		end
+	end
+})
+outerTab:AddButton({
+	Name = "Stop (Kill or Pull)",
+	Description = "",
+	Callback = function()
+		innerFlag = false
+		outerFlag = false
+
+		for _, descendant in ipairs(backpackContainer.Character:GetDescendants()) do
+			if descendant:IsA("BasePart") then
+				descendant.CanCollide = true
+				descendant.Velocity = Vector3.zero
+				descendant.RotVelocity = Vector3.zero
+			end
+		end
+
+		local Humanoid = backpackContainer.Character:FindFirstChild("Humanoid")
+
+		if Humanoid then
+			Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+		end
+
+		for _, descendant in ipairs(workspace:GetDescendants()) do
+			if descendant:IsA("Seat") or descendant:IsA("VehicleSeat") then
+				descendant.Disabled = false
+			end
+		end
+
+		if Position then
+			local HumanoidRootPart = backpackContainer.Character:FindFirstChild("HumanoidRootPart")
+
+			if HumanoidRootPart then
+				HumanoidRootPart.Anchored = true
+				HumanoidRootPart.CFrame = CFrame.new(Position + Vector3.new(0, 5, 0))
+				task.wait(0.2)
+				HumanoidRootPart.Velocity = Vector3.zero
+				HumanoidRootPart.RotVelocity = Vector3.zero
+				HumanoidRootPart.Anchored = false
+
+				if Humanoid then
+					Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end
+
+			Position = nil
+		end
+
+		updateSteppedConnectionDisabled()
+
+		local data = {
+			[1] = "DeleteAllVehicles"
+		}
+
+		pcall(function()
+			ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(data))
+		end)
+	end
+})
+outerTab:AddSection({ " flings" })
+outerTab:AddDropdown({
+	Name = "Select Metode Fling",
+	Description = "",
+	Options = {
+		"Sofa",
+		"Bus",
+		"Ball",
+		"Ball V2",
+		"Ship",
+		"Truck"
+	},
+	Callback = function(state)
+		capturedState = state
+	end
+})
+
+local function createBodyVelocity(updateSteppedConnectionFlag)
+	if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character and backpackContainer.Character then
+		local characterModel = backpackContainer.Character or backpackContainer.CharacterAdded:Wait()
+		local Humanoid = characterModel:FindFirstChildOfClass("Humanoid")
+		local HumanoidRootPart = characterModel:FindFirstChild("HumanoidRootPart")
+
+		if Humanoid and HumanoidRootPart then
+			HumanoidRootPartPosition = HumanoidRootPart.Position
+
+			if handleSteppedConnection() then
+				task.wait(0.5)
+				Couch = characterModel:FindFirstChild("Couch")
+
+				if not Couch then
+					for _, descendant in ipairs(workspace:GetDescendants()) do
+						if (descendant.Name == "Couch" or descendant.Name == "Couch" .. backpackContainer.Name) and (descendant:IsA("BasePart") or descendant:IsA("Tool")) then
+							Couch = descendant
+
+							break
+						end
+					end
+				end
+
+				if Couch then
+					if Couch:IsA("BasePart") then
+						createBodyVelocityData = {
+							Anchored = Couch.Anchored,
+							CanCollide = Couch.CanCollide,
+							CanTouch = Couch.CanTouch
+						}
+						Couch.Anchored = false
+						Couch.CanCollide = true
+						Couch.CanTouch = true
+						pcall(function()
+							Couch:SetNetworkOwner(nil)
+						end)
+					end
+
+					createBodyVelocityFlag = true
+					connection = secondaryRunService.Stepped:Connect(function()
+						if createBodyVelocityFlag then
+							for _, descendant in ipairs(characterModel:GetDescendants()) do
+								if descendant:IsA("BasePart") then
+									descendant.CanCollide = false
+								end
+							end
+
+							return
+						end
+					end)
+
+					local timestamp = tick()
+					local BodyVelocity = nil
+
+					alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+						if createBodyVelocityFlag then
+							if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character then
+								local humanoidRootPart = updateSteppedConnectionFlag.Character:FindFirstChild("HumanoidRootPart")
+								local humanoid = updateSteppedConnectionFlag.Character:FindFirstChild("Humanoid")
+
+								if humanoidRootPart and humanoid then
+									if HumanoidRootPart and Humanoid then
+										pcall(function()
+											local position = humanoidRootPart.Position
+
+											characterModel:SetPrimaryPartCFrame(CFrame.new(position) * CFrame.Angles(math.rad(workspace.DistributedGameTime * 12000), math.rad(workspace.DistributedGameTime * 15000), math.rad(workspace.DistributedGameTime * 18000)))
+										end)
+
+										if humanoid.Sit or tick() - timestamp > 10 then
+											createBodyVelocityFlag = false
+											alternateConnection:Disconnect()
+											alternateConnection = nil
+
+											for _, descendant in ipairs(characterModel:GetDescendants()) do
+												if descendant:IsA("BasePart") then
+													descendant.CanCollide = false
+													pcall(function()
+														descendant:SetNetworkOwner(nil)
+													end)
+												end
+											end
+
+											BodyVelocity = Instance.new("BodyVelocity")
+											BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+											BodyVelocity.Velocity = Vector3.new(math.random(-5, 5), 5, math.random(-5, 5)).Unit * 1000000 + Vector3.new(0, 1000000, 0)
+											BodyVelocity.Parent = HumanoidRootPart
+											pcall(function()
+												HumanoidRootPart.Anchored = true
+												HumanoidRootPart.CFrame = CFrame.new(Vector3.new(-59599.73, 2040070.5, -293391.16))
+												HumanoidRootPart.Anchored = false
+											end)
+
+											local updateSteppedConnectionNumber = tick()
+											local connection = nil
+
+											connection = secondaryRunService.Heartbeat:Connect(function()
+												if not (tick() - updateSteppedConnectionNumber >= 0.5) then
+													pcall(function()
+														characterModel:SetPrimaryPartCFrame(HumanoidRootPart.CFrame * CFrame.Angles(math.rad(workspace.DistributedGameTime * 12000), math.rad(workspace.DistributedGameTime * 15000), math.rad(workspace.DistributedGameTime * 18000)))
+													end)
+
+													return
+												end
+
+												connection:Disconnect()
+											end)
+											task.wait(0.5)
+
+											local updateSteppedConnectionData = {
+												[1] = "PlayerWantsToDeleteTool",
+												[2] = "Couch"
+											}
+
+											pcall(function()
+												ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(updateSteppedConnectionData))
+											end)
+											pcall(function()
+												HumanoidRootPart.Anchored = true
+												HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPartPosition + Vector3.new(0, 5, 0))
+												task.wait(0.2)
+												HumanoidRootPart.Velocity = Vector3.zero
+												HumanoidRootPart.RotVelocity = Vector3.zero
+												HumanoidRootPart.Anchored = false
+
+												if Humanoid then
+													Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+												end
+											end)
+
+											if BodyVelocity then
+												BodyVelocity:Destroy()
+
+												for _, descendant in ipairs(characterModel:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = true
+													end
+												end
+											end
+
+											if updateSteppedConnectionCondition then
+												updateSteppedConnectionCondition:SetValue(false)
+											end
+										end
+
+										return
+									end
+
+									createBodyVelocityFlag = false
+
+									return
+								end
+
+								createBodyVelocityFlag = false
+
+								return
+							end
+
+							createBodyVelocityFlag = false
+
+							return
+						end
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function handleBodyVelocity()
+	local Backpack = backpackContainer:WaitForChild("Backpack")
+	local soccerBall = Backpack:FindFirstChild("SoccerBall") or backpackContainer.Character:FindFirstChild("SoccerBall")
+
+	if not soccerBall then
+		local bodyVelocityData = {
+			[1] = "PickingTools",
+			[2] = "SoccerBall"
+		}
+
+		if not pcall(function()
+			ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Too1l"):InvokeServer(unpack(bodyVelocityData))
+		end) then
+			return false
+		end
+
+		repeat
+			soccerBall = Backpack:FindFirstChild("SoccerBall")
+			task.wait()
+		until soccerBall or task.wait(5)
+
+		if not soccerBall then
+			return false
+		end
+	end
+
+	if soccerBall.Parent ~= backpackContainer.Character then
+		soccerBall.Parent = backpackContainer.Character
+	end
+
+	return true
+end
+local function secondaryCreateBodyVelocity(firstChild)
+	if firstChild and firstChild.Character then
+		local humanoidRootPartContainer = backpackContainer.Character or backpackContainer.CharacterAdded:Wait()
+		local Humanoid = humanoidRootPartContainer:FindFirstChildOfClass("Humanoid")
+		local HumanoidRootPart = humanoidRootPartContainer:FindFirstChild("HumanoidRootPart")
+
+		if Humanoid and HumanoidRootPart then
+			if handleBodyVelocity() then
+				task.wait(0.5)
+
+				local data = {
+					[1] = "PlayerWantsToDeleteTool",
+					[2] = "SoccerBall"
+				}
+
+				pcall(function()
+					ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(data))
+				end)
+
+				local WorkspaceCom = workspace:FindFirstChild("WorkspaceCom")
+
+				if WorkspaceCom then
+					local value001SoccerBalls = WorkspaceCom:FindFirstChild("001_SoccerBalls")
+
+					if value001SoccerBalls then
+						secondaryFirstChild = value001SoccerBalls:FindFirstChild("Soccer" .. backpackContainer.Name)
+
+						if secondaryFirstChild then
+							createBodyVelocityData = {
+								Anchored = secondaryFirstChild.Anchored,
+								CanCollide = secondaryFirstChild.CanCollide,
+								CanTouch = secondaryFirstChild.CanTouch
+							}
+							secondaryFirstChild.Anchored = false
+							secondaryFirstChild.CanCollide = true
+							secondaryFirstChild.CanTouch = true
+							pcall(function()
+								secondaryFirstChild:SetNetworkOwner(nil)
+							end)
+							HumanoidRootPartPosition = HumanoidRootPart.Position
+
+							for _, descendant in ipairs(humanoidRootPartContainer:GetDescendants()) do
+								if descendant:IsA("BasePart") then
+									descendant.CanCollide = false
+								end
+							end
+
+							if Humanoid then
+								Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+								Humanoid.Sit = false
+							end
+
+							for _, descendant in ipairs(workspace:GetDescendants()) do
+								if descendant:IsA("Seat") or descendant:IsA("VehicleSeat") then
+									descendant.Disabled = true
+								end
+							end
+
+							pcall(function()
+								ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clothe1s"):FireServer("CharacterSizeDown", 4)
+							end)
+							createBodyVelocityFlag = true
+
+							local createBodyVelocityNumber = 0
+
+							connection = secondaryRunService.Heartbeat:Connect(function()
+								if createBodyVelocityFlag and firstChild.Character then
+									local humanoidRootPart = firstChild.Character:FindFirstChild("HumanoidRootPart")
+									local humanoid = firstChild.Character:FindFirstChild("Humanoid")
+									local secondaryHumanoidRootPart = backpackContainer.Character:FindFirstChild("HumanoidRootPart")
+
+									if humanoidRootPart and humanoid and secondaryHumanoidRootPart then
+										local MoveDirection = humanoid.MoveDirection
+										local isMoveDirectionMagnitude = MoveDirection.Magnitude < 0.1
+
+										if not humanoid.Sit then
+											if not isMoveDirectionMagnitude then
+												local createBodyVelocityNumber = MoveDirection.Unit * math.clamp(humanoidRootPart.Velocity.Magnitude * 0.15, 5, 12)
+
+												secondaryFirstChild.CFrame = CFrame.new(humanoidRootPart.Position + createBodyVelocityNumber + Vector3.new(0, 0.75, 0))
+											else
+												local createBodyVelocityNumber = math.sin(tick() * 50) * 3
+
+												secondaryFirstChild.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 0.75, createBodyVelocityNumber))
+											end
+										else
+											local createBodyVelocityNumber = math.sin(tick() * 50) * 2
+
+											secondaryFirstChild.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 0.75 + createBodyVelocityNumber, 0))
+										end
+
+										secondaryHumanoidRootPart.CFrame = CFrame.new(secondaryFirstChild.Position + Vector3.new(0, 1, 0))
+
+										return
+									end
+
+									return
+								end
+							end)
+							alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+								if createBodyVelocityFlag and firstChild.Character then
+									local parent = firstChild.Character:FindFirstChild("HumanoidRootPart")
+
+									if parent then
+										if (secondaryFirstChild.Position - parent.Position).Magnitude < 4 and tick() - createBodyVelocityNumber > 0.4 then
+											createBodyVelocityNumber = tick()
+
+											for _, descendant in ipairs(firstChild.Character:GetDescendants()) do
+												if descendant:IsA("BasePart") then
+													descendant.CanCollide = false
+												end
+											end
+
+											local BodyVelocity = Instance.new("BodyVelocity")
+
+											BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+											BodyVelocity.Velocity = Vector3.new(math.random(-5, 5), 5, math.random(-5, 5)).Unit * 500000 + Vector3.new(0, 250000, 0)
+											BodyVelocity.Parent = parent
+											task.delay(0.3, function()
+												BodyVelocity:Destroy()
+
+												for _, descendant in ipairs(firstChild.Character:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = true
+													end
+												end
+											end)
+										end
+
+										return
+									end
+
+									return
+								end
+							end)
+
+							return
+						end
+
+						return
+					end
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function alternateCreateBodyVelocity(firstChild)
+	if firstChild and firstChild.Character then
+		local HumanoidRootPart = (backpackContainer.Character or backpackContainer.CharacterAdded:Wait()):FindFirstChild("HumanoidRootPart")
+
+		if HumanoidRootPart then
+			if handleBodyVelocity() then
+				task.wait(0.5)
+
+				local data = {
+					[1] = "PlayerWantsToDeleteTool",
+					[2] = "SoccerBall"
+				}
+
+				pcall(function()
+					ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(data))
+				end)
+
+				local WorkspaceCom = workspace:FindFirstChild("WorkspaceCom")
+
+				if WorkspaceCom then
+					local value001SoccerBalls = WorkspaceCom:FindFirstChild("001_SoccerBalls")
+
+					if value001SoccerBalls then
+						secondaryFirstChild = value001SoccerBalls:FindFirstChild("Soccer" .. backpackContainer.Name)
+
+						if secondaryFirstChild then
+							createBodyVelocityData = {
+								Anchored = secondaryFirstChild.Anchored,
+								CanCollide = secondaryFirstChild.CanCollide,
+								CanTouch = secondaryFirstChild.CanTouch
+							}
+							secondaryFirstChild.Anchored = false
+							secondaryFirstChild.CanCollide = true
+							secondaryFirstChild.CanTouch = true
+							pcall(function()
+								secondaryFirstChild:SetNetworkOwner(nil)
+							end)
+							HumanoidRootPartPosition = HumanoidRootPart.Position
+							createBodyVelocityFlag = true
+
+							local createBodyVelocityNumber = 0
+
+							connection = secondaryRunService.Heartbeat:Connect(function()
+								if createBodyVelocityFlag and firstChild.Character then
+									local humanoidRootPart = firstChild.Character:FindFirstChild("HumanoidRootPart")
+									local Humanoid = firstChild.Character:FindFirstChild("Humanoid")
+
+									if humanoidRootPart and Humanoid then
+										local Magnitude = humanoidRootPart.Velocity.Magnitude
+										local isMoveDirectionMagnitude = Humanoid.MoveDirection.Magnitude > 0.05
+										local isHumanoidStateTypeJumping = Humanoid:GetState() == Enum.HumanoidStateType.Jumping
+										local createBodyVelocityNumber
+
+										if not isMoveDirectionMagnitude and not isHumanoidStateTypeJumping then
+											local product = math.sin(tick() * 25) * 4
+											local number = math.cos(tick() * 20) * 1.5
+
+											createBodyVelocityNumber = Vector3.new(number, 1, product)
+										else
+											local clampedValue = math.clamp(Magnitude / 1.5, 6, 15)
+
+											createBodyVelocityNumber = humanoidRootPart.CFrame.LookVector * clampedValue + Vector3.new(0, 1, 0)
+										end
+
+										pcall(function()
+											secondaryFirstChild.CFrame = CFrame.new(humanoidRootPart.Position + createBodyVelocityNumber)
+											secondaryFirstChild.AssemblyLinearVelocity = Vector3.new(9999, 9999, 9999)
+										end)
+
+										return
+									end
+
+									return
+								end
+							end)
+							alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+								if createBodyVelocityFlag and firstChild.Character then
+									local parent = firstChild.Character:FindFirstChild("HumanoidRootPart")
+
+									if parent then
+										if (secondaryFirstChild.Position - parent.Position).Magnitude < 4 and tick() - createBodyVelocityNumber > 0.4 then
+											createBodyVelocityNumber = tick()
+
+											for _, descendant in ipairs(firstChild.Character:GetDescendants()) do
+												if descendant:IsA("BasePart") then
+													descendant.CanCollide = false
+												end
+											end
+
+											local BodyVelocity = Instance.new("BodyVelocity")
+
+											BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+											BodyVelocity.Velocity = Vector3.new(math.random(-5, 5), 5, math.random(-5, 5)).Unit * 500000 + Vector3.new(0, 250000, 0)
+											BodyVelocity.Parent = parent
+											task.delay(0.3, function()
+												BodyVelocity:Destroy()
+
+												for _, descendant in ipairs(firstChild.Character:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = true
+													end
+												end
+											end)
+										end
+
+										return
+									end
+
+									return
+								end
+							end)
+
+							return
+						end
+
+						return
+					end
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function secondaryUpdateSteppedConnection(updateSteppedConnectionFlag)
+	if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character and backpackContainer.Character then
+		local humanoidRootPartContainer = backpackContainer.Character or backpackContainer.CharacterAdded:Wait()
+		local Humanoid = humanoidRootPartContainer:FindFirstChildOfClass("Humanoid")
+		local HumanoidRootPart = humanoidRootPartContainer:FindFirstChild("HumanoidRootPart")
+
+		if Humanoid and HumanoidRootPart then
+			HumanoidRootPartPosition = HumanoidRootPart.Position
+			pcall(function()
+				HumanoidRootPart.Anchored = true
+				HumanoidRootPart.CFrame = CFrame.new(Vector3.new(1181.83, 76.08, -1158.83))
+				task.wait(0.2)
+				HumanoidRootPart.Velocity = Vector3.zero
+				HumanoidRootPart.RotVelocity = Vector3.zero
+				HumanoidRootPart.Anchored = false
+
+				if Humanoid then
+					Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end)
+			task.wait(0.5)
+			updateSteppedConnectionDisabled()
+
+			local updateSteppedConnectionData = {
+				[1] = "DeleteAllVehicles"
+			}
+
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			updateSteppedConnectionData = {
+				[1] = "PickingCar",
+				[2] = "SchoolBus"
+			}
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			task.wait(1)
+
+			local Vehicles = workspace:FindFirstChild("Vehicles")
+
+			if Vehicles then
+				local firstChild = Vehicles:FindFirstChild(backpackContainer.Name .. "Car")
+
+				if firstChild then
+					pcall(function()
+						HumanoidRootPart.Anchored = true
+						HumanoidRootPart.CFrame = CFrame.new(Vector3.new(1171.15, 79.45, -1166.2))
+						task.wait(0.2)
+						HumanoidRootPart.Velocity = Vector3.zero
+						HumanoidRootPart.RotVelocity = Vector3.zero
+						HumanoidRootPart.Anchored = false
+						Humanoid:ChangeState(Enum.HumanoidStateType.Seated)
+					end)
+
+					local timestamp = tick()
+
+					repeat
+						task.wait()
+
+						if tick() - timestamp > 10 then
+							return
+						end
+					until Humanoid.Sit
+
+					for _, descendant in ipairs(firstChild:GetDescendants()) do
+						if descendant:IsA("BasePart") then
+							descendant.CanCollide = false
+							pcall(function()
+								descendant:SetNetworkOwner(nil)
+							end)
+						end
+					end
+
+					createBodyVelocityFlag = true
+					connection = secondaryRunService.Stepped:Connect(function()
+						if createBodyVelocityFlag then
+							for _, descendant in ipairs(humanoidRootPartContainer:GetDescendants()) do
+								if descendant:IsA("BasePart") then
+									descendant.CanCollide = false
+								end
+							end
+
+							return
+						end
+					end)
+
+					local updateSteppedConnectionNumber = tick()
+					local BodyVelocity = nil
+
+					alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+						if createBodyVelocityFlag then
+							if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character then
+								local humanoidRootPart = updateSteppedConnectionFlag.Character:FindFirstChild("HumanoidRootPart")
+								local humanoid = updateSteppedConnectionFlag.Character:FindFirstChild("Humanoid")
+
+								if humanoidRootPart and humanoid then
+									if HumanoidRootPart and Humanoid then
+										local sumNumber = Vector3.new(math.random(-10, 10), 0, math.random(-10, 10))
+
+										pcall(function()
+											local updateSteppedConnectionNumber = humanoidRootPart.Position + sumNumber
+
+											firstChild:PivotTo(CFrame.new(updateSteppedConnectionNumber) * CFrame.Angles(math.rad(workspace.DistributedGameTime * 12000), math.rad(workspace.DistributedGameTime * 15000), math.rad(workspace.DistributedGameTime * 18000)))
+										end)
+
+										local updateSteppedConnectionFlag = false
+
+										for _, descendant in ipairs(firstChild:GetDescendants()) do
+											if (descendant:IsA("Seat") or descendant:IsA("VehicleSeat")) and descendant.Name ~= "VehicleSeat" and humanoid == descendant.Occupant then
+												updateSteppedConnectionFlag = true
+
+												break
+											end
+										end
+
+										if updateSteppedConnectionFlag or tick() - updateSteppedConnectionNumber > 10 then
+											createBodyVelocityFlag = false
+											alternateConnection:Disconnect()
+											alternateConnection = nil
+											pcall(function()
+												firstChild:PivotTo(CFrame.new(Vector3.new(-59599.73, 2040070.5, -293391.16)))
+											end)
+											BodyVelocity = Instance.new("BodyVelocity")
+											BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+											BodyVelocity.Velocity = Vector3.new(math.random(-5, 5), 5, math.random(-5, 5)).Unit * 1000000 + Vector3.new(0, 1000000, 0)
+											BodyVelocity.Parent = HumanoidRootPart
+											task.wait(0.5)
+											updateSteppedConnectionDisabled()
+
+											local updateSteppedConnectionData = {
+												[1] = "DeleteAllVehicles"
+											}
+
+											pcall(function()
+												ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+											end)
+
+											if BodyVelocity then
+												BodyVelocity:Destroy()
+
+												for _, descendant in ipairs(humanoidRootPartContainer:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = true
+													end
+												end
+											end
+
+											pcall(function()
+												HumanoidRootPart.Anchored = true
+												HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPartPosition + Vector3.new(0, 5, 0))
+												task.wait(0.2)
+												HumanoidRootPart.Velocity = Vector3.zero
+												HumanoidRootPart.RotVelocity = Vector3.zero
+												HumanoidRootPart.Anchored = false
+
+												if Humanoid then
+													Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+												end
+											end)
+
+											if updateSteppedConnectionCondition then
+												updateSteppedConnectionCondition:Set(false)
+											end
+										end
+
+										return
+									end
+
+									createBodyVelocityFlag = false
+
+									return
+								end
+
+								createBodyVelocityFlag = false
+
+								return
+							end
+
+							createBodyVelocityFlag = false
+
+							return
+						end
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function alternateUpdateSteppedConnection(updateSteppedConnectionFlag)
+	if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character and backpackContainer.Character then
+		local humanoidContainer = backpackContainer.Character or backpackContainer.CharacterAdded:Wait()
+		local Humanoid = humanoidContainer:FindFirstChildOfClass("Humanoid")
+		local HumanoidRootPart = humanoidContainer:FindFirstChild("HumanoidRootPart")
+
+		if Humanoid and HumanoidRootPart then
+			HumanoidRootPartPosition = HumanoidRootPart.Position
+			pcall(function()
+				HumanoidRootPart.Anchored = true
+				HumanoidRootPart.CFrame = CFrame.new(Vector3.new(-3359.52, -5.05, -501.94))
+				task.wait(0.2)
+				HumanoidRootPart.Velocity = Vector3.zero
+				HumanoidRootPart.RotVelocity = Vector3.zero
+				HumanoidRootPart.Anchored = false
+
+				if Humanoid then
+					Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end)
+			updateSteppedConnectionDisabled()
+
+			local updateSteppedConnectionData = {
+				[1] = "DeleteAllVehicles"
+			}
+
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			task.wait(0.4)
+			updateSteppedConnectionData = {
+				[1] = "PickingBoat",
+				[2] = "MilitaryBoatFree"
+			}
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			task.wait(1.5)
+
+			local Vehicles = workspace:FindFirstChild("Vehicles")
+
+			if Vehicles then
+				local firstChild = Vehicles:FindFirstChild(backpackContainer.Name .. "Car")
+
+				if firstChild then
+					pcall(function()
+						HumanoidRootPart.Anchored = true
+						HumanoidRootPart.CFrame = CFrame.new(Vector3.new(-3358.85, 5.25, -521.95))
+						task.wait(0.2)
+						HumanoidRootPart.Velocity = Vector3.zero
+						HumanoidRootPart.RotVelocity = Vector3.zero
+						HumanoidRootPart.Anchored = false
+						Humanoid:ChangeState(Enum.HumanoidStateType.Seated)
+					end)
+
+					local timestamp = tick()
+
+					repeat
+						task.wait()
+
+						if tick() - timestamp > 10 then
+							return
+						end
+					until Humanoid.Sit
+
+					for _, descendant in ipairs(firstChild:GetDescendants()) do
+						if descendant:IsA("BasePart") then
+							descendant.CanCollide = false
+							pcall(function()
+								descendant:SetNetworkOwner(nil)
+							end)
+						end
+					end
+
+					createBodyVelocityFlag = true
+					connection = secondaryRunService.Stepped:Connect(function()
+						if createBodyVelocityFlag then
+							for _, descendant in ipairs(humanoidContainer:GetDescendants()) do
+								if descendant:IsA("BasePart") then
+									descendant.CanCollide = false
+								end
+							end
+
+							return
+						end
+					end)
+
+					local updateSteppedConnectionNumber = tick()
+
+					alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+						if createBodyVelocityFlag then
+							if updateSteppedConnectionFlag and updateSteppedConnectionFlag.Character then
+								local humanoidRootPart = updateSteppedConnectionFlag.Character:FindFirstChild("HumanoidRootPart")
+								local humanoid = updateSteppedConnectionFlag.Character:FindFirstChild("Humanoid")
+
+								if humanoidRootPart and humanoid then
+									if HumanoidRootPart and Humanoid then
+										local sumNumber = Vector3.new(math.random(-10, 10), 0, math.random(-10, 10))
+
+										pcall(function()
+											local updateSteppedConnectionNumber = humanoidRootPart.Position + sumNumber
+
+											firstChild:PivotTo(CFrame.new(updateSteppedConnectionNumber) * CFrame.Angles(math.rad(workspace.DistributedGameTime * 12000), math.rad(workspace.DistributedGameTime * 15000), math.rad(workspace.DistributedGameTime * 18000)))
+										end)
+
+										local updateSteppedConnectionFlag = false
+
+										for _, descendant in ipairs(firstChild:GetDescendants()) do
+											if (descendant:IsA("Seat") or descendant:IsA("VehicleSeat")) and descendant.Name ~= "VehicleSeat" and humanoid == descendant.Occupant then
+												updateSteppedConnectionFlag = true
+
+												break
+											end
+										end
+
+										if updateSteppedConnectionFlag or tick() - updateSteppedConnectionNumber > 10 then
+											createBodyVelocityFlag = false
+
+											if connection then
+												connection:Disconnect()
+												connection = nil
+											end
+
+											if alternateConnection then
+												alternateConnection:Disconnect()
+												alternateConnection = nil
+											end
+
+											pcall(function()
+												firstChild:PivotTo(CFrame.new(Vector3.new(-76.6, -401.97, -84.26)))
+											end)
+											task.wait(0.5)
+											updateSteppedConnectionDisabled()
+
+											local updateSteppedConnectionData = {
+												[1] = "DeleteAllVehicles"
+											}
+
+											pcall(function()
+												ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+											end)
+
+											if humanoidContainer then
+												local humanoidRootPart = humanoidContainer:FindFirstChild("HumanoidRootPart")
+
+												if humanoidRootPart and HumanoidRootPartPosition then
+													pcall(function()
+														humanoidRootPart.Anchored = true
+														humanoidRootPart.CFrame = CFrame.new(HumanoidRootPartPosition + Vector3.new(0, 5, 0))
+														task.wait(0.2)
+														humanoidRootPart.Velocity = Vector3.zero
+														humanoidRootPart.RotVelocity = Vector3.zero
+														humanoidRootPart.Anchored = false
+
+														if Humanoid then
+															Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+														end
+													end)
+												end
+											end
+
+											if humanoidContainer then
+												for _, descendant in ipairs(humanoidContainer:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = true
+														descendant.Velocity = Vector3.zero
+														descendant.RotVelocity = Vector3.zero
+													end
+												end
+											end
+
+											local updateSteppedConnectionOption = humanoidContainer and humanoidContainer:FindFirstChild("Humanoid")
+
+											if updateSteppedConnectionOption then
+												updateSteppedConnectionOption:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+											end
+
+											for _, descendant in ipairs(workspace:GetDescendants()) do
+												if descendant:IsA("Seat") or descendant:IsA("VehicleSeat") then
+													descendant.Disabled = false
+												end
+											end
+
+											pcall(function()
+												ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clothe1s"):FireServer("CharacterSizeUp", 1)
+											end)
+
+											if updateSteppedConnectionCondition then
+												updateSteppedConnectionCondition:Set(false)
+											end
+										end
+
+										return
+									end
+
+									createBodyVelocityFlag = false
+
+									return
+								end
+
+								createBodyVelocityFlag = false
+
+								return
+							end
+
+							createBodyVelocityFlag = false
+
+							return
+						end
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function additionalUpdateSteppedConnection(secondaryPlayer)
+	if secondaryPlayer and secondaryPlayer.Character and backpackContainer.Character then
+		local humanoidContainer = backpackContainer.Character or backpackContainer.CharacterAdded:Wait()
+		local Humanoid = humanoidContainer:FindFirstChildOfClass("Humanoid")
+		local HumanoidRootPart = humanoidContainer:FindFirstChild("HumanoidRootPart")
+
+		if Humanoid and HumanoidRootPart then
+			HumanoidRootPartPosition = HumanoidRootPart.Position
+			pcall(function()
+				HumanoidRootPart.Anchored = true
+				HumanoidRootPart.CFrame = CFrame.new(Vector3.new(1181.83, 76.08, -1158.83))
+				task.wait(0.2)
+				HumanoidRootPart.Velocity = Vector3.zero
+				HumanoidRootPart.RotVelocity = Vector3.zero
+				HumanoidRootPart.Anchored = false
+
+				if Humanoid then
+					Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end)
+			task.wait(0.5)
+			updateSteppedConnectionDisabled()
+
+			local updateSteppedConnectionData = {
+				[1] = "DeleteAllVehicles"
+			}
+
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			updateSteppedConnectionData = {
+				[1] = "PickingCar",
+				[2] = "Semi"
+			}
+			pcall(function()
+				ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+			end)
+			task.wait(1)
+
+			local Vehicles = workspace:FindFirstChild("Vehicles")
+
+			if Vehicles then
+				local firstChild = Vehicles:FindFirstChild(backpackContainer.Name .. "Car")
+
+				if firstChild then
+					pcall(function()
+						HumanoidRootPart.Anchored = true
+						HumanoidRootPart.CFrame = CFrame.new(Vector3.new(1176.56, 79.9, -1166.65))
+						task.wait(0.2)
+						HumanoidRootPart.Velocity = Vector3.zero
+						HumanoidRootPart.RotVelocity = Vector3.zero
+						HumanoidRootPart.Anchored = false
+						Humanoid:ChangeState(Enum.HumanoidStateType.Seated)
+					end)
+
+					local timestamp = tick()
+
+					repeat
+						task.wait()
+
+						if tick() - timestamp > 10 then
+							return
+						end
+					until Humanoid.Sit
+
+					for _, descendant in ipairs(firstChild:GetDescendants()) do
+						if descendant:IsA("BasePart") then
+							descendant.CanCollide = false
+							pcall(function()
+								descendant:SetNetworkOwner(nil)
+							end)
+						end
+					end
+
+					createBodyVelocityFlag = true
+					connection = secondaryRunService.Stepped:Connect(function()
+						if createBodyVelocityFlag then
+							for _, descendant in ipairs(humanoidContainer:GetDescendants()) do
+								if descendant:IsA("BasePart") then
+									descendant.CanCollide = false
+								end
+							end
+
+							return
+						end
+					end)
+
+					local updateSteppedConnectionNumber = tick()
+					local number = 0
+
+					alternateConnection = secondaryRunService.Heartbeat:Connect(function()
+						if createBodyVelocityFlag then
+							if secondaryPlayer and secondaryPlayer.Character then
+								local parent = secondaryPlayer.Character:FindFirstChild("HumanoidRootPart")
+								local humanoid = secondaryPlayer.Character:FindFirstChild("Humanoid")
+
+								if parent and humanoid then
+									if HumanoidRootPart and Humanoid then
+										local input = firstChild:FindFirstChild("Body") and firstChild.Body:FindFirstChild("Trailer")
+
+										if input then
+											local product = math.sin(tick() * 30) * 5
+
+											pcall(function()
+												local updateSteppedConnectionNumber = parent.Position + Vector3.new(0, product, 0)
+
+												input:PivotTo(CFrame.new(updateSteppedConnectionNumber))
+											end)
+
+											if (input.Position - parent.Position).Magnitude < 5 and tick() - number > 0.4 then
+												number = tick()
+
+												for _, descendant in ipairs(secondaryPlayer.Character:GetDescendants()) do
+													if descendant:IsA("BasePart") then
+														descendant.CanCollide = false
+													end
+												end
+
+												local BodyVelocity = Instance.new("BodyVelocity")
+
+												BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+												BodyVelocity.Velocity = Vector3.new(math.random(-10, 10), 50, math.random(-10, 10)).Unit * 10000000 + Vector3.new(0, 5000000, 0)
+												BodyVelocity.Parent = parent
+												task.delay(0.5, function()
+													BodyVelocity:Destroy()
+
+													for _, descendant in ipairs(secondaryPlayer.Character:GetDescendants()) do
+														if descendant:IsA("BasePart") then
+															descendant.CanCollide = true
+														end
+													end
+												end)
+											end
+
+											local updateSteppedConnectionFlag = false
+
+											for _, descendant in ipairs(firstChild:GetDescendants()) do
+												if (descendant:IsA("Seat") or descendant:IsA("VehicleSeat")) and descendant.Name ~= "VehicleSeat" and humanoid == descendant.Occupant then
+													updateSteppedConnectionFlag = true
+
+													break
+												end
+											end
+
+											if updateSteppedConnectionFlag or tick() - updateSteppedConnectionNumber > 10 then
+												createBodyVelocityFlag = false
+
+												if connection then
+													connection:Disconnect()
+													connection = nil
+												end
+
+												if alternateConnection then
+													alternateConnection:Disconnect()
+													alternateConnection = nil
+												end
+
+												pcall(function()
+													firstChild:PivotTo(CFrame.new(Vector3.new(-59599.73, 2040070.5, -293391.16)))
+												end)
+												task.wait(0.5)
+												updateSteppedConnectionDisabled()
+
+												local updateSteppedConnectionData = {
+													[1] = "DeleteAllVehicles"
+												}
+
+												pcall(function()
+													ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateSteppedConnectionData))
+												end)
+
+												if humanoidContainer then
+													local humanoidRootPart = humanoidContainer:FindFirstChild("HumanoidRootPart")
+
+													if humanoidRootPart and HumanoidRootPartPosition then
+														pcall(function()
+															humanoidRootPart.Anchored = true
+															humanoidRootPart.CFrame = CFrame.new(HumanoidRootPartPosition + Vector3.new(0, 5, 0))
+															task.wait(0.2)
+															humanoidRootPart.Velocity = Vector3.zero
+															humanoidRootPart.RotVelocity = Vector3.zero
+															humanoidRootPart.Anchored = false
+
+															if Humanoid then
+																Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+															end
+														end)
+													end
+												end
+
+												if humanoidContainer then
+													for _, descendant in ipairs(humanoidContainer:GetDescendants()) do
+														if descendant:IsA("BasePart") then
+															descendant.CanCollide = true
+															descendant.Velocity = Vector3.zero
+															descendant.RotVelocity = Vector3.zero
+														end
+													end
+												end
+
+												local updateSteppedConnectionOption = humanoidContainer and humanoidContainer:FindFirstChild("Humanoid")
+
+												if updateSteppedConnectionOption then
+													updateSteppedConnectionOption:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+												end
+
+												for _, descendant in ipairs(workspace:GetDescendants()) do
+													if descendant:IsA("Seat") or descendant:IsA("VehicleSeat") then
+														descendant.Disabled = false
+													end
+												end
+
+												pcall(function()
+													ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clothe1s"):FireServer("CharacterSizeUp", 1)
+												end)
+
+												if updateSteppedConnectionCondition then
+													updateSteppedConnectionCondition:Set(false)
+												end
+											end
+
+											return
+										end
+
+										return
+									end
+
+									createBodyVelocityFlag = false
+
+									return
+								end
+
+								createBodyVelocityFlag = false
+
+								return
+							end
+
+							createBodyVelocityFlag = false
+
+							return
+						end
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+
+		return
+	end
+end
+local function alternateUpdateInstanceProperties()
+	createBodyVelocityFlag = false
+
+	if connection then
+		connection:Disconnect()
+		connection = nil
+	end
+
+	if alternateConnection then
+		alternateConnection:Disconnect()
+		alternateConnection = nil
+	end
+
+	if secondaryFirstChild then
+		secondaryFirstChild.Anchored = createBodyVelocityData.Anchored
+		secondaryFirstChild.CanCollide = createBodyVelocityData.CanCollide
+		secondaryFirstChild.CanTouch = createBodyVelocityData.CanTouch
+	end
+
+	if Couch and Couch:IsA("BasePart") then
+		Couch.Anchored = createBodyVelocityData.Anchored
+		Couch.CanCollide = createBodyVelocityData.CanCollide
+		Couch.CanTouch = createBodyVelocityData.CanTouch
+	end
+
+	updateSteppedConnectionDisabled()
+
+	local updateInstancePropertiesData = {
+		[1] = "DeleteAllVehicles"
+	}
+
+	pcall(function()
+		ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(updateInstancePropertiesData))
+	end)
+	task.wait(0.2)
+
+	local Character = backpackContainer.Character
+
+	if Character then
+		for _, descendant in ipairs(Character:GetDescendants()) do
+			if descendant:IsA("BasePart") then
+				descendant.CanCollide = true
+				descendant.Velocity = Vector3.zero
+				descendant.RotVelocity = Vector3.zero
+			end
+		end
+	end
+
+	local updateInstancePropertiesCondition = Character and Character:FindFirstChild("Humanoid")
+
+	if updateInstancePropertiesCondition then
+		updateInstancePropertiesCondition:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+	end
+
+	for _, descendant in ipairs(workspace:GetDescendants()) do
+		if descendant:IsA("Seat") or descendant:IsA("VehicleSeat") then
+			descendant.Disabled = false
+		end
+	end
+
+	pcall(function()
+		ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Clothe1s"):FireServer("CharacterSizeUp", 1)
+	end)
+
+	if HumanoidRootPartPosition then
+		local cFrameCondition = Character and Character:FindFirstChild("HumanoidRootPart")
+
+		if cFrameCondition then
+			pcall(function()
+				cFrameCondition.Anchored = true
+				cFrameCondition.CFrame = CFrame.new(HumanoidRootPartPosition + Vector3.new(0, 5, 0))
+				task.wait(0.2)
+				cFrameCondition.Velocity = Vector3.zero
+				cFrameCondition.RotVelocity = Vector3.zero
+				cFrameCondition.Anchored = false
+
+				if updateInstancePropertiesCondition then
+					updateInstancePropertiesCondition:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end)
+		end
+	end
+end
+
+updateSteppedConnectionCondition = outerTab:AddToggle({
+	Name = "ActivateFling",
+	Description = "",
+	Default = false,
+	Callback = function(flag)
+		if not flag then
+			alternateUpdateInstanceProperties()
+		else
+			if innerFlag or outerFlag or createBodyVelocityFlag then
+				updateSteppedConnectionCondition:Set(false)
+
+				return
+			end
+
+			if capturedState ~= "Sofá" then
+				if capturedState ~= "Bola" then
+					if capturedState ~= "Bola V2" then
+						if capturedState ~= "Barco" then
+							if capturedState ~= "Caminhão" then
+								if capturedState == "\239\191\189nibus" then
+									secondaryUpdateSteppedConnection(firstChild)
+								end
+							else
+								additionalUpdateSteppedConnection(firstChild)
+							end
+						else
+							alternateUpdateSteppedConnection(firstChild)
+						end
+					else
+						alternateCreateBodyVelocity(firstChild)
+					end
+				else
+					secondaryCreateBodyVelocity(firstChild)
+				end
+			else
+				createBodyVelocity(firstChild)
+			end
+		end
+	end
+})
+outerTab:AddSection({ "fling ALL and turn off RGB before use" })
+
+local outerPlayers = game:GetService("Players")
+local alternateLocalValuePlayer = outerPlayers.LocalPlayer
+local workspaceComContainer = game:GetService("Workspace")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local alternateRunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+
+orbitando = false
+orbitConn = nil
+allFling = false
+allConn = nil
+currentPlayerList = nil
+currentPlayerIndex = nil
+lastSwitchTime = nil
+allFling2 = false
+allConn2 = nil
+secondaryFirstChild = nil
+createBodyVelocityData = nil
+excludedPlayers = {}
+
+local function handleResult(resultArgument)
+	local HeadShot = Enum.ThumbnailType.HeadShot
+	local size420X = Enum.ThumbnailSize.Size420x420
+	local ok, result = pcall(function()
+		return outerPlayers:GetUserThumbnailAsync(resultArgument, HeadShot, size420X)
+	end)
+
+	if not ok then
+		warn("Erro ao obter thumbnail: " .. tostring(result))
+
+		return nil
+	end
+
+	return result
+end
+local function handlePlayer(playerText)
+	local searchableText = playerText:lower()
+
+	for _, player in ipairs(outerPlayers:GetPlayers()) do
+		if player.Name:lower():find(searchableText) then
+			return player
+		end
+	end
+
+	return nil
+end
+local function fallbackHandler(title, text, flag)
+	pcall(function()
+		StarterGui:SetCore("SendNotification", {
+			Title = title,
+			Text = text,
+			Icon = flag or "",
+			Duration = 5
+		})
+	end)
+end
+
+outerTab:AddTextBox({
+	Name = "add player to waitelist",
+	Description = "Enter Part Of The Player Name",
+	PlaceholderText = "Ex.: (player123)",
+	Callback = function(text)
+		if text ~= "" then
+			local secondaryPlayer = handlePlayer(text)
+
+			if not secondaryPlayer then
+				fallbackHandler("Jogador Não Encontrado", "Nenhum jogador encontrado com '" .. text .. "'.", nil)
+			else
+				for _, item in ipairs(excludedPlayers) do
+					if item == secondaryPlayer then
+						fallbackHandler("Jogador Já esta na whaitelist", "Jogador " .. secondaryPlayer.Name .. " já foi adicionado.", handleResult(secondaryPlayer.UserId))
+
+						return
+					end
+				end
+
+				table.insert(excludedPlayers, secondaryPlayer)
+
+				local result = handleResult(secondaryPlayer.UserId)
+
+				fallbackHandler("Jogador adicionado", "Jogador " .. secondaryPlayer.Name .. " foi removido dos flings.", result)
+			end
+
+			return
+		end
+
+		fallbackHandler("Nenhuma Ação", "Digite um nome para adicionar um jogador.", nil)
+	end
+})
+outerTab:AddButton({
+	"Verify",
+	function()
+		if #excludedPlayers ~= 0 then
+			for i, item in ipairs(excludedPlayers) do
+				local result = handleResult(item.UserId)
+
+				fallbackHandler("Jogador adicionado " .. i, "Jogador " .. item.Name .. " está removido dos flings.", result)
+				task.wait(0.5)
+			end
+
+			return
+		end
+
+		fallbackHandler("Nenhum na whaitelist", "Nenhum jogador está removido dos flings.", nil)
+	end
+})
+outerTab:AddButton({
+	"Remove Verify",
+	function()
+		if #excludedPlayers ~= 0 then
+			excludedPlayers = {}
+			fallbackHandler("whaitelists Removidas", "Todos os jogadores foram removidos da whaitelist.", nil)
+
+			return
+		end
+
+		fallbackHandler("Nenhum removido", "Nenhum jogador para remover da whaitelist.", nil)
+	end
+})
+outerTab:AddButton({
+	"Orbit Soccerball",
+	function()
+		if not orbitando then
+			if handleBodyVelocity() then
+				task.wait(0.5)
+
+				local humanoidRootPartContainer = alternateLocalValuePlayer.Character or alternateLocalValuePlayer.CharacterAdded:Wait()
+				local HumanoidRootPart = humanoidRootPartContainer:FindFirstChild("HumanoidRootPart")
+
+				if HumanoidRootPart then
+					local WorkspaceCom = workspaceComContainer:FindFirstChild("WorkspaceCom")
+					local firstChildOption = WorkspaceCom and WorkspaceCom:FindFirstChild("001_SoccerBalls")
+
+					secondaryFirstChild = firstChildOption and firstChildOption:FindFirstChild("Soccer" .. alternateLocalValuePlayer.Name)
+
+					if secondaryFirstChild then
+						createBodyVelocityData = {
+							Anchored = secondaryFirstChild.Anchored,
+							CanCollide = secondaryFirstChild.CanCollide,
+							CanTouch = secondaryFirstChild.CanTouch
+						}
+						secondaryFirstChild.Anchored = false
+						secondaryFirstChild.CanCollide = true
+						secondaryFirstChild.CanTouch = true
+						pcall(function()
+							secondaryFirstChild:SetNetworkOwner(nil)
+						end)
+						orbitando = true
+						orbitConn = alternateRunService.Heartbeat:Connect(function()
+							if orbitando and (secondaryFirstChild and secondaryFirstChild.Parent and HumanoidRootPart and HumanoidRootPart.Parent and humanoidRootPartContainer and humanoidRootPartContainer.Parent) then
+								local product = tick() * 10
+								local number = 3
+								local cFrameNumber = Vector3.new(math.cos(product) * number, -1, math.sin(product) * number)
+
+								secondaryFirstChild.CFrame = CFrame.new(HumanoidRootPart.Position + cFrameNumber)
+								secondaryFirstChild.AssemblyLinearVelocity = Vector3.new(9999, 9999, 9999)
+
+								return
+							end
+
+							if orbitConn then
+								orbitConn:Disconnect()
+								orbitConn = nil
+							end
+
+							orbitando = false
+
+							if secondaryFirstChild and createBodyVelocityData then
+								secondaryFirstChild.Anchored = createBodyVelocityData.Anchored
+								secondaryFirstChild.CanCollide = createBodyVelocityData.CanCollide
+								secondaryFirstChild.CanTouch = createBodyVelocityData.CanTouch
+							end
+
+							secondaryFirstChild = nil
+							createBodyVelocityData = nil
+						end)
+
+						return
+					end
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+	end
+})
+outerTab:AddButton({
+	"Fling ALL Soccerball V1",
+	function()
+		if not allFling then
+			if handleBodyVelocity() then
+				task.wait(0.5)
+
+				local data = {
+					[1] = "PlayerWantsToDeleteTool",
+					[2] = "SoccerBall"
+				}
+
+				pcall(function()
+					replicatedStorage:WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(data))
+				end)
+
+				local WorkspaceCom = workspaceComContainer:FindFirstChild("WorkspaceCom")
+				local firstChildOption = WorkspaceCom and WorkspaceCom:FindFirstChild("001_SoccerBalls")
+
+				secondaryFirstChild = firstChildOption and firstChildOption:FindFirstChild("Soccer" .. alternateLocalValuePlayer.Name)
+
+				if secondaryFirstChild then
+					createBodyVelocityData = {
+						Anchored = secondaryFirstChild.Anchored,
+						CanCollide = secondaryFirstChild.CanCollide,
+						CanTouch = secondaryFirstChild.CanTouch
+					}
+					secondaryFirstChild.Anchored = false
+					secondaryFirstChild.CanCollide = true
+					secondaryFirstChild.CanTouch = true
+					pcall(function()
+						secondaryFirstChild:SetNetworkOwner(nil)
+					end)
+					allFling = true
+
+					local function handleCurrentPlayerList()
+						local players = {}
+
+						for _, player in ipairs(outerPlayers:GetPlayers()) do
+							local flag = false
+
+							for _, item in ipairs(excludedPlayers) do
+								if player == item then
+									flag = true
+
+									break
+								end
+							end
+
+							if player ~= alternateLocalValuePlayer and not flag and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+								table.insert(players, player)
+							end
+						end
+
+						for i = #players, 2, -1 do
+							local randomResult = math.random(i)
+							local secondaryI = players[randomResult]
+
+							players[randomResult] = players[i]
+							players[i] = secondaryI
+						end
+
+						return players
+					end
+
+					allConn = alternateRunService.Heartbeat:Connect(function()
+						if allFling and (secondaryFirstChild and secondaryFirstChild.Parent) then
+							if not currentPlayerList or #currentPlayerList == 0 then
+								currentPlayerList = handleCurrentPlayerList()
+								currentPlayerIndex = 1
+								lastSwitchTime = tick()
+							end
+
+							if #currentPlayerList ~= 0 then
+								if tick() - lastSwitchTime >= 4 then
+									currentPlayerIndex = currentPlayerIndex + 1
+
+									if currentPlayerIndex > #currentPlayerList then
+										currentPlayerList = handleCurrentPlayerList()
+										currentPlayerIndex = 1
+									end
+
+									lastSwitchTime = tick()
+								end
+
+								local secondaryCurrentPlayerIndex = currentPlayerList[currentPlayerIndex]
+
+								if secondaryCurrentPlayerIndex and secondaryCurrentPlayerIndex.Character then
+									local Character = secondaryCurrentPlayerIndex.Character
+
+									if Character and Character:FindFirstChild("HumanoidRootPart") and Character:FindFirstChild("Humanoid") then
+										local HumanoidRootPart = Character.HumanoidRootPart
+										local Humanoid = Character.Humanoid
+										local Magnitude = HumanoidRootPart.Velocity.Magnitude
+										local isHumanoidStateTypeJumping = Humanoid:GetState() == Enum.HumanoidStateType.Jumping
+										local sum
+
+										if not (Humanoid.MoveDirection.Magnitude > 0.05) and not isHumanoidStateTypeJumping then
+											local product = math.sin(tick() * 25) * 4
+											local number = math.cos(tick() * 20) * 1.5
+
+											sum = Vector3.new(number, 1, product)
+										else
+											sum = HumanoidRootPart.CFrame.LookVector * math.clamp(Magnitude / 1.5, 6, 18) + Vector3.new(0, 1, 0)
+										end
+
+										secondaryFirstChild.CFrame = CFrame.new(HumanoidRootPart.Position + sum)
+										secondaryFirstChild.AssemblyLinearVelocity = Vector3.new(9999, 9999, 9999)
+
+										if (secondaryFirstChild.Position - HumanoidRootPart.Position).Magnitude < 4 then
+											local BodyVelocity = Instance.new("BodyVelocity")
+
+											BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+											BodyVelocity.Velocity = Vector3.new(math.random(-5, 5), 5, math.random(-5, 5)).Unit * 500000 + Vector3.new(0, 250000, 0)
+											BodyVelocity.Parent = HumanoidRootPart
+											task.delay(0.3, function()
+												BodyVelocity:Destroy()
+											end)
+										end
+									end
+
+									return
+								end
+
+								return
+							end
+
+							return
+						end
+
+						if allConn then
+							allConn:Disconnect()
+							allConn = nil
+						end
+
+						allFling = false
+
+						if secondaryFirstChild and createBodyVelocityData then
+							secondaryFirstChild.Anchored = createBodyVelocityData.Anchored
+							secondaryFirstChild.CanCollide = createBodyVelocityData.CanCollide
+							secondaryFirstChild.CanTouch = createBodyVelocityData.CanTouch
+						end
+
+						secondaryFirstChild = nil
+						createBodyVelocityData = nil
+						currentPlayerList = nil
+						currentPlayerIndex = nil
+						lastSwitchTime = nil
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+	end
+})
+outerTab:AddButton({
+	"Fling ALL Soccerball V2",
+	function()
+		if not allFling2 then
+			if handleBodyVelocity() then
+				task.wait(0.5)
+
+				local data = {
+					[1] = "PlayerWantsToDeleteTool",
+					[2] = "SoccerBall"
+				}
+
+				pcall(function()
+					replicatedStorage:WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(data))
+				end)
+
+				local WorkspaceCom = workspaceComContainer:FindFirstChild("WorkspaceCom")
+				local firstChildOption = WorkspaceCom and WorkspaceCom:FindFirstChild("001_SoccerBalls")
+
+				secondaryFirstChild = firstChildOption and firstChildOption:FindFirstChild("Soccer" .. alternateLocalValuePlayer.Name)
+
+				if secondaryFirstChild then
+					createBodyVelocityData = {
+						Anchored = secondaryFirstChild.Anchored,
+						CanCollide = secondaryFirstChild.CanCollide,
+						CanTouch = secondaryFirstChild.CanTouch
+					}
+					secondaryFirstChild.Anchored = false
+					secondaryFirstChild.CanCollide = true
+					secondaryFirstChild.CanTouch = true
+					pcall(function()
+						secondaryFirstChild:SetNetworkOwner(nil)
+					end)
+					allFling2 = true
+					allConn2 = alternateRunService.Heartbeat:Connect(function()
+						if allFling2 and (secondaryFirstChild and secondaryFirstChild.Parent) then
+							local players = {}
+
+							for _, player in ipairs(outerPlayers:GetPlayers()) do
+								local flag = false
+
+								for _, item in ipairs(excludedPlayers) do
+									if player == item then
+										flag = true
+
+										break
+									end
+								end
+
+								if player ~= alternateLocalValuePlayer and not flag and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+									table.insert(players, player)
+								end
+							end
+
+							for i = #players, 2, -1 do
+								local randomResult = math.random(i)
+								local secondaryI = players[randomResult]
+
+								players[randomResult] = players[i]
+								players[i] = secondaryI
+							end
+
+							for _, item in ipairs(players) do
+								if not allFling2 then
+									return
+								end
+
+								local Character = item.Character
+
+								if Character and Character:FindFirstChild("HumanoidRootPart") and Character:FindFirstChild("Humanoid") then
+									local HumanoidRootPart = Character.HumanoidRootPart
+									local Humanoid = Character.Humanoid
+									local Magnitude = HumanoidRootPart.Velocity.Magnitude
+									local isHumanoidStateTypeJumping = Humanoid:GetState() == Enum.HumanoidStateType.Jumping
+									local sum
+
+									if not (Humanoid.MoveDirection.Magnitude > 0.05) and not isHumanoidStateTypeJumping then
+										local product = math.sin(tick() * 25) * 4
+										local number = math.cos(tick() * 20) * 1.5
+
+										sum = Vector3.new(number, 1, product)
+									else
+										sum = HumanoidRootPart.CFrame.LookVector * math.clamp(Magnitude / 1.5, 6, 18) + Vector3.new(0, 1, 0)
+									end
+
+									secondaryFirstChild.CFrame = CFrame.new(HumanoidRootPart.Position + sum)
+									secondaryFirstChild.AssemblyLinearVelocity = Vector3.new(9999, 9999, 9999)
+
+									if (secondaryFirstChild.Position - HumanoidRootPart.Position).Magnitude < 4 then
+										local BodyVelocity = Instance.new("BodyVelocity")
+
+										BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+										BodyVelocity.Velocity = Vector3.new(math.random(-5, 5), 5, math.random(-5, 5)).Unit * 1000000 + Vector3.new(0, 1000000, 0)
+										BodyVelocity.Parent = HumanoidRootPart
+										task.delay(0.3, function()
+											BodyVelocity:Destroy()
+										end)
+									end
+								end
+
+								task.wait(0.1)
+							end
+
+							return
+						end
+
+						if allConn2 then
+							allConn2:Disconnect()
+							allConn2 = nil
+						end
+
+						allFling2 = false
+
+						if secondaryFirstChild and createBodyVelocityData then
+							secondaryFirstChild.Anchored = createBodyVelocityData.Anchored
+							secondaryFirstChild.CanCollide = createBodyVelocityData.CanCollide
+							secondaryFirstChild.CanTouch = createBodyVelocityData.CanTouch
+						end
+
+						secondaryFirstChild = nil
+						createBodyVelocityData = nil
+					end)
+
+					return
+				end
+
+				return
+			end
+
+			return
+		end
+	end
+})
+outerTab:AddButton({
+	"Stop All",
+	function()
+		orbitando = false
+
+		if orbitConn then
+			orbitConn:Disconnect()
+			orbitConn = nil
+		end
+
+		allFling = false
+
+		if allConn then
+			allConn:Disconnect()
+			allConn = nil
+		end
+
+		currentPlayerList = nil
+		currentPlayerIndex = nil
+		lastSwitchTime = nil
+		allFling2 = false
+
+		if allConn2 then
+			allConn2:Disconnect()
+			allConn2 = nil
+		end
+
+		if secondaryFirstChild and createBodyVelocityData then
+			secondaryFirstChild.Anchored = createBodyVelocityData.Anchored
+			secondaryFirstChild.CanCollide = createBodyVelocityData.CanCollide
+			secondaryFirstChild.CanTouch = createBodyVelocityData.CanTouch
+		end
+
+		secondaryFirstChild = nil
+		createBodyVelocityData = nil
+		fallbackHandler("Tudo Parado", "Todas as funções foram desativadas.", nil)
+	end
+})
+previousTab:AddButton({
+	Name = "FE Jerk Off Hub Matrix",
+	Description = "Universal",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/ExploitFin/AquaMatrix/refs/heads/AquaMatrix/AquaMatrix"))()
+	end
+})
+previousTab:AddButton({
+	Name = "FE HUGG",
+	Description = "Universal",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
+	end
+})
+previousTab:AddButton({
+	Name = "Black Hole",
+	Description = "Universal",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/main/BringFlingPlayers"))("More Scripts: t.me/arceusxscripts")
+	end
+})
+previousTab:AddSection({ "System Broken Void Protector" })
+previousTab:AddButton({
+	Name = "System Broken",
+	Description = "Universal",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/H20CalibreYT/SystemBroken/main/script"))()
+	end
+})
+previousTab:AddButton({
+	Name = "Rochips",
+	Description = "Universal",
+	Callback = function()
+		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-rochips-universal-18294"))()
+	end
+})
+previousTab:AddButton({
+	Name = "Sander X",
+	Description = "Somente para Brookhaven",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/kigredns/SanderXV4.2.2/refs/heads/main/New.lua"))()
+	end
+})
+previousTab:AddButton({
+	Name = "Reverse",
+	Description = "Universal",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe./main/L"))()
+	end
+})
+previousTab:AddButton({
+	Name = "R4D",
+	Description = "Somente para Brookhaven",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"))()
+	end
+})
+
+local additionalLocalValuePlayer = game.Players.LocalPlayer
+local defaultText = "Morro"
+local conditionData = {
+	idk = Vector3.new(-348.64, 65.94, -458.08),
+	Square = Vector3.new(-26.17, 3.48, -0.93),
+	idk = Vector3.new(1.99, 3.32, 236.65),
+	Hospital = Vector3.new(-303.2, 3.4, 13.74),
+	["City Hall"] = Vector3.new(-354.65, 7.32, -102.16),
+	Farm = Vector3.new(-766.41, 2.92, -61.1),
+	Market = Vector3.new(16.31, 3.32, -107.07),
+	Shopping = Vector3.new(151.05, 3.52, -190.64),
+	idk = Vector3.new(290.23, 4.32, 42.57),
+	Hotel = Vector3.new(159.1, 3.32, 164.97),
+	["Seaside 1"] = Vector3.new(55.69, 2.94, -1403.6),
+	["Seaside 2"] = Vector3.new(42.39, 2.94, 1336.14)
+}
+
+currentTab:AddDropdown({
+	Name = "Locations On Brookhaven",
+	Description = "Select Location To Teleport ",
+	Default = defaultText,
+	Multi = false,
+	Options = {
+		"Morro",
+		"Praça",
+		"Banco",
+		"Hospital",
+		"Prefeitura",
+		"Fazenda",
+		"Mercado",
+		"Shopping",
+		"Aeroporto",
+		"Hotel",
+		"Beira-mar 1",
+		"Beira-mar 2"
+	},
+	Callback = function(text)
+		defaultText = text
+	end
+})
+currentTab:AddButton({
+	Name = "Teleport",
+	Description = "",
+	Callback = function()
+		if additionalLocalValuePlayer.Character and additionalLocalValuePlayer.Character:FindFirstChild("HumanoidRootPart") then
+			local HumanoidRootPart = additionalLocalValuePlayer.Character.HumanoidRootPart
+			local Humanoid = additionalLocalValuePlayer.Character:FindFirstChildOfClass("Humanoid")
+			local cFrameCondition = conditionData[defaultText]
+
+			if cFrameCondition then
+				pcall(function()
+					if Humanoid then
+						Humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+						Humanoid.WalkSpeed = 0
+					end
+
+					HumanoidRootPart.Anchored = true
+					HumanoidRootPart.CFrame = CFrame.new(cFrameCondition)
+					task.wait(0.4)
+					HumanoidRootPart.Anchored = false
+
+					if Humanoid then
+						Humanoid.WalkSpeed = 16
+						Humanoid:ChangeState(Enum.HumanoidStateType.Running)
+					end
+				end)
+			end
+		end
+	end
+})
